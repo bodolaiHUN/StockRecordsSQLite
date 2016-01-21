@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/termekLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/termek" />
+
+    <TextView
+        android:id="@+id/termek"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/termekLabel"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/helyeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/termekLabel"
+        android:text="@string/helyeLabel" />
+
+    <TextView
+        android:id="@+id/helye"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/termek"
+        android:layout_toRightOf="@+id/helyeLabel"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/darabLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/helyeLabel"
+        android:text="@string/darabLabel" />
+
+    <TextView
+        android:id="@+id/darab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/helye"
+        android:layout_toRightOf="@+id/darabLabel"
+        android:textStyle="bold" />
+
+</RelativeLayout>

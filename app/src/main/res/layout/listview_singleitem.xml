@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="1"
+    android:touchscreenBlocksFocus="false">
+
+    <TableRow>
+
+        <TextView
+            android:id="@+id/termekLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/termek" />
+
+        <TextView
+            android:id="@+id/termek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:onClick="onClick"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/space0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/space" />
+
+    </TableRow>
+    <TableRow>
+
+        <TextView
+            android:id="@+id/helyeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/helyeLabel" />
+
+        <TextView
+            android:id="@+id/helye"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
+
+    </TableRow>
+    <TableRow>
+        <TextView
+
+            android:id="@+id/szavatossagLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/szavatossagLabel"/>
+
+        <TextView
+            android:id="@+id/szavatossag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
+
+    </TableRow>
+    <TableRow>
+
+        <TextView
+            android:id="@+id/darabLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/darabLabel" />
+
+        <TextView
+            android:id="@+id/darab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
+
+    </TableRow>
+    <TableRow>
+        <TextView
+            android:id="@+id/minmennyisegLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/minMennyisegLabel"/>
+
+        <TextView
+            android:id="@+id/minmennyiseg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
+
+    </TableRow>
+    <TableRow>
+
+        <TextView
+            android:id="@+id/ertekelesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ertekelesLabel"/>
+
+        <TextView
+            android:id="@+id/ertekeles"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
+
+    </TableRow>
+
+    <View
+        android:layout_height="2dip"
+        android:background="#FF909090" />
+
+</TableLayout>
