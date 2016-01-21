@@ -37,9 +37,9 @@ public class LekerdezesActivity extends Activity {
     }
 
     public void lekerdezes(int queryString){
-        String[] mQuery = {"SELECT * FROM " + mClass.TABLE_STOCK + " ORDER BY " + mClass.STOCK_ID + " DESC",
-                "SELECT * FROM " + mClass.TABLE_STOCK + " WHERE " +  mClass.SZAV_IDO_FIGYEL + " >= " + today,
-                "SELECT * FROM " + mClass.TABLE_STOCK + " WHERE " + mClass.DARAB + " < " + mClass.MIN_DARAB};
+        String[] mQuery = {"SELECT * FROM " + DatabaseHandler.TABLE_STOCK + " ORDER BY " + DatabaseHandler.STOCK_ID + " DESC",
+                "SELECT * FROM " + DatabaseHandler.TABLE_STOCK + " WHERE " + DatabaseHandler.SZAV_IDO_FIGYEL + " >= " + today,
+                "SELECT * FROM " + DatabaseHandler.TABLE_STOCK + " WHERE " + DatabaseHandler.DARAB + " < " + DatabaseHandler.MIN_DARAB};
         // Get the view from listview_main.xml
         setContentView(R.layout.listview_main);
         ListView myListView = (ListView) findViewById(R.id.listview);
