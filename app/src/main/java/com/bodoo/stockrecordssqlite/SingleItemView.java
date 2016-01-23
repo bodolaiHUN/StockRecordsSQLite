@@ -58,4 +58,8 @@ public class SingleItemView extends Activity implements View.OnLongClickListener
         return false;
     }
 
+    public void onClick(View view) {
+        return;
+    }
+
 }

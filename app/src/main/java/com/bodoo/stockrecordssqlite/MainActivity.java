@@ -33,8 +33,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     int queryString;
     String year_x, month_x, day_x;
     int year, month, day, cur = 0;
-    String scanString;
+    String scanString, barcodeString;
+    Boolean barcodeMarVan;
     static final int DIALOG_ID1 = 1, DIALOG_ID2 = 2;
+    Barcode myBarcode;
+    Stock myStock;
+    Termek myTermek;
+    TableControllerBarcode myTCB;
+    //ConnectionDetector cd;
 
 
     @Override
@@ -58,10 +64,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         scanTextView = (TextView) findViewById(R.id.scanTextView);
         szavatossagTextView = (TextView) findViewById(R.id.szavatossagTextView);
         szavFigyelTextView = (TextView) findViewById(R.id.szavFigyelTextView);
-        final Stock myStock = new Stock();
+        myStock = new Stock();
+        myTermek = new Termek();
+        myBarcode = new Barcode();
+        myTCB = new TableControllerBarcode(this);
         resetData();
 
-        //ConnectionDetector cd = new ConnectionDetector(getApplicationContext());                  // Internet kapcsolat ellenorzese
+        //cd = new ConnectionDetector(getApplicationContext());                  // Internet kapcsolat ellenorzese
         //Boolean isInternetPresent = cd.isConnectingToInternet(); // true or false
 
         lekerdezesButton.setOnClickListener(new View.OnClickListener() {                            // Lekérdezés activity megnyitása
@@ -78,6 +87,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 final Context context = v.getContext();
                 myStock.setBarcode(scanTextView.getText().toString());
+                if (barcodeMarVan == false){
+                    myBarcode.setBarcode(scanTextView.getText().toString());
+                    myBarcode.setTermek(termekNeveEditText.getText().toString());
+                    Toast.makeText(getApplicationContext(), "sikerult", Toast.LENGTH_SHORT).show();
+                }
                 myStock.setTermek(termekNeveEditText.getText().toString());
                 myStock.setDarab(mennyisegEditText.getText().toString());
                 myStock.setHelye(helyeEditText.getText().toString());
@@ -86,11 +100,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 myStock.setSzavIdoFigyel(szavFigyelTextView.getText().toString());
                 myStock.setErtekeles(ertekelesEditText.getText().toString());
                 boolean createSuccessful = new TableControllerStock(context).create(myStock);
+                //if(createSuccessful){
+                //    Toast.makeText(context, "Sikerult", Toast.LENGTH_SHORT).show();
+                //    resetData();
+                //}else{
+                //    Toast.makeText(context, "Nem sikerult", Toast.LENGTH_SHORT).show();
+                //}
+                boolean createSuccesful = new TableControllerBarcode(context).create(myBarcode);
                 if(createSuccessful){
-                    Toast.makeText(context, "Sikerult", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Barcode OK", Toast.LENGTH_SHORT).show();
                     resetData();
                 }else{
-                    Toast.makeText(context, "Nem sikerult", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Barcode nem OK", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -168,8 +189,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
             scanString = scanResult.getContents();
-            //Log.d("code", re);
             scanTextView.setText(scanString);
+            if (myTCB.checkIfExists(scanString)){
+                barcodeString = myTCB.readTermek(scanString);
+                //barcodeString = myBarcode.getTermek();
+                termekNeveEditText.setText(barcodeString);
+                barcodeMarVan = true;
+            }else {
+                barcodeMarVan = false;
+            }
         }
     }
 

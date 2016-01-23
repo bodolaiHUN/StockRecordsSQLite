@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,7 +42,6 @@ public class LekerdezesActivity extends Activity {
         // Get the view from listview_main.xml
         setContentView(R.layout.listview_main);
         ListView myListView = (ListView) findViewById(R.id.listview);
-        Toast.makeText(getApplicationContext(), today, Toast.LENGTH_SHORT).show();
         ArrayList<Stock> stockdatalist = new TableControllerStock(this).readCustomQuery(mQuery[queryString]);
         adapter = new ListViewAdapter(LekerdezesActivity.this, stockdatalist);
         myListView.setAdapter(adapter);

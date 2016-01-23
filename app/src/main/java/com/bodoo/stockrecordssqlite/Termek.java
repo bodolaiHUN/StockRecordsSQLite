@@ -6,7 +6,8 @@ package com.bodoo.stockrecordssqlite;
 public class Termek {
 
     private int id;
-    private String termekSql;
+    private String termek;
+    private String minDarab;
 
     public int getId() {
         return id;
@@ -16,11 +17,13 @@ public class Termek {
         this.id = id;
     }
 
-    public String getTermekSql() {
-        return termekSql;
+    public String getTermek() {
+        return termek;
     }
 
-    public void setTermekSql(String termek) {
-        this.termekSql = termek;
-    }
+    public void setTermek(String termek) {this.termek = termek;}
+
+    public String getMinDarab() {return minDarab;}
+
+    public void setMinDarab(String minDarab) {this.minDarab = minDarab;}
 }

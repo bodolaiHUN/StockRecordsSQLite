@@ -19,7 +19,7 @@ public class TableControllerTermek extends DatabaseHandler {
 
         ContentValues values = new ContentValues();
 
-        values.put(TERMEK_ITEM, mTermek.getTermekSql());
+        values.put(TERMEK_ITEM, mTermek.getTermek());
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -58,7 +58,7 @@ public class TableControllerTermek extends DatabaseHandler {
 
                 mTermek = new Termek();
                 mTermek.setId(id);
-                mTermek.setTermekSql(termek);
+                mTermek.setTermek(termek);
                 recordsList.add(mTermek);
 
             } while (cursor.moveToNext());
@@ -88,7 +88,7 @@ public class TableControllerTermek extends DatabaseHandler {
 
             mTermek = new Termek();
             mTermek.setId(id);
-            mTermek.setTermekSql(termek);
+            mTermek.setTermek(termek);
 
         }
 
@@ -103,7 +103,7 @@ public class TableControllerTermek extends DatabaseHandler {
         ContentValues values = new ContentValues();
 
         values.put(TERMEK_ID, mTermek.getId());
-        values.put(TERMEK_ITEM, mTermek.getTermekSql());
+        values.put(TERMEK_ITEM, mTermek.getTermek());
 
         String where = TERMEK_ID + " = ?";
 
@@ -134,7 +134,7 @@ public class TableControllerTermek extends DatabaseHandler {
         boolean recordExists = false;
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT " + TERMEK_ID + " FROM " + TABLE_TERMEK + " WHERE " + TERMEK_ITEM + " = " + objectName + "'", null);
+        Cursor cursor = db.rawQuery("SELECT " + TERMEK_ID + " FROM " + TABLE_TERMEK + " WHERE " + TERMEK_ITEM + " = " + objectName + " ", null);
 
         if(cursor!=null) {
 

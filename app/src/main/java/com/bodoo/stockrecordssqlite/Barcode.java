@@ -6,7 +6,7 @@ package com.bodoo.stockrecordssqlite;
 public class Barcode {
 
     private int id;
-    private String barcodeSql;
+    private String barcode;
     private String termek;
 
     public int getId() {
@@ -17,12 +17,12 @@ public class Barcode {
         this.id = id;
     }
 
-    public String getBarcodeSql() {
-        return barcodeSql;
+    public String getBarcode() {
+        return barcode;
     }
 
-    public void setBarcodeSql(String barcodeSql) {
-        this.barcodeSql = barcodeSql;
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
     }
 
     public String getTermek() {
