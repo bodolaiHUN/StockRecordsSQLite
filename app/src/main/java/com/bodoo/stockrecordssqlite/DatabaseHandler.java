@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     // Database name
     protected static final String DATABASE_NAME = "StockRecords";
     // Table names
@@ -27,6 +27,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String BARCODE_ID = "id";
     public static final String BARCODE = "barcode";
     public static final String BARCODE_TERMEK = "termek";
+    public static final String BARCODE_MINDARAB = "minDarab";
     // termek column name
     public static final String TERMEK_ID = "id";
     public static final String TERMEK_ITEM = "termek";
@@ -54,7 +55,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String barcodeSql = "CREATE TABLE " + TABLE_BARCODE + "(" +
                 BARCODE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 BARCODE + " TEXT UNIQUE, " +
-                BARCODE_TERMEK + " TEXT)";
+                BARCODE_TERMEK + " TEXT, " +
+                BARCODE_MINDARAB + " TEXT)";
 
         String termekSql = "CREATE TABLE " + TABLE_TERMEK + "(" +
                 TERMEK_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
