@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     int queryString;
     String year_x, month_x, day_x;
     int year, month, day, cur = 0;
-    String scanString, barcodeString;
-    Boolean barcodeMarVan;
+    String scanString;
+    Boolean barcodeMarVan = false;
     static final int DIALOG_ID1 = 1, DIALOG_ID2 = 2;
     Barcode myBarcode;
     Stock myStock;
@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myTCB = new TableControllerBarcode(this);
         resetData();
 
-        //cd = new ConnectionDetector(getApplicationContext());                  // Internet kapcsolat ellenorzese
-        //Boolean isInternetPresent = cd.isConnectingToInternet(); // true or false
+        //cd = new ConnectionDetector(getApplicationContext());                                     // Internet kapcsolat ellenorzese
+        //Boolean isInternetPresent = cd.isConnectingToInternet();                                  // true or false
 
         lekerdezesButton.setOnClickListener(new View.OnClickListener() {                            // Lekérdezés activity megnyitása
             @Override
@@ -88,10 +88,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 final Context context = v.getContext();
                 myStock.setBarcode(scanTextView.getText().toString());
-                if (barcodeMarVan == false){
+                if (barcodeMarVan != true){
                     myBarcode.setBarcode(scanTextView.getText().toString());
                     myBarcode.setTermek(termekNeveEditText.getText().toString());
-                    Toast.makeText(getApplicationContext(), "sikerult", Toast.LENGTH_SHORT).show();
+                    myBarcode.setMinDarab(minMennyisegEditText.getText().toString());
+                    Toast.makeText(getApplicationContext(), myBarcode.getMinDarab().toString(), Toast.LENGTH_SHORT).show();
                 }
                 myStock.setTermek(termekNeveEditText.getText().toString());
                 myStock.setDarab(mennyisegEditText.getText().toString());
@@ -109,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 //}
                 boolean createSuccesful = new TableControllerBarcode(context).create(myBarcode);
                 if(createSuccessful){
-                    Toast.makeText(context, "Barcode OK", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Barcode OK", Toast.LENGTH_SHORT).show();
                     resetData();
                 }else{
                     Toast.makeText(context, "Barcode nem OK", Toast.LENGTH_SHORT).show();
@@ -192,10 +193,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             scanString = scanResult.getContents();
             scanTextView.setText(scanString);
             if (myTCB.checkIfExists(scanString)){
-                barcodeString = myTCB.readTermek(scanString);
                 termekNeveEditText.setTextColor(Color.BLUE);
-                termekNeveEditText.setText(barcodeString);
-                termekNeveEditText.setTextColor(Color.BLACK);
+                termekNeveEditText.setText(myTCB.readTermek(scanString)[0]);
+                minMennyisegEditText.setTextColor(Color.BLUE);
+                minMennyisegEditText.setText(myTCB.readTermek(scanString)[1]);
+                //Toast.makeText(getApplicationContext(), ("minDarab: " + myTCB.readTermek(scanString)[1]), Toast.LENGTH_SHORT).show();
                 barcodeMarVan = true;
             }else {
                 barcodeMarVan = false;

@@ -21,6 +21,7 @@ public class TableControllerBarcode extends DatabaseHandler {
 
         values.put(BARCODE_TERMEK, mBarcode.getTermek());
         values.put(BARCODE, mBarcode.getBarcode());
+        values.put(BARCODE_MINDARAB, mBarcode.getMinDarab());
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -74,12 +75,12 @@ public class TableControllerBarcode extends DatabaseHandler {
     }
 
 
-    public String readTermek(String item) {
+    public String[] readTermek(String item) {
 
         //Barcode mBarcode = null;
-        String termek = "";
+        String data[] = new String[2];
 
-        String sql = "SELECT " + BARCODE_TERMEK + " FROM " + TABLE_BARCODE + " WHERE " + BARCODE + " = " + item;
+        String sql = "SELECT " + BARCODE_TERMEK + " , " + BARCODE_MINDARAB + " FROM " + TABLE_BARCODE + " WHERE " + BARCODE + " = " + item;
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -87,14 +88,16 @@ public class TableControllerBarcode extends DatabaseHandler {
 
         if (cursor.moveToFirst()) {
 
-            termek = cursor.getString(cursor.getColumnIndex(BARCODE_TERMEK));
+            data[0] = cursor.getString(cursor.getColumnIndex(BARCODE_TERMEK));
+            data[1] = cursor.getString(cursor.getColumnIndex(BARCODE_MINDARAB));
         }
 
         cursor.close();
         db.close();
 
-        return termek;
+        return data;
     }
+
 
     public boolean update(Barcode mBarcode) {
 
