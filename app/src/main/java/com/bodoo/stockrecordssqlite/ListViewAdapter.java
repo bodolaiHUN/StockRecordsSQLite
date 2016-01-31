@@ -24,14 +24,14 @@ public class ListViewAdapter extends BaseAdapter {
         this.context = context;
         this.stockdatalist = stockdatalist;
         inflater = LayoutInflater.from(context);
-        this.arraylist = new ArrayList<Stock>();
+        this.arraylist = new ArrayList<>();
         this.arraylist.addAll(stockdatalist);
     }
 
     public class ViewHolder {
         TextView termek;
-        TextView helye;
         TextView darab;
+        TextView minmennyiseg;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ListViewAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.listview_item, null);
             // Locate the TextViews in listview_item.xml
             holder.termek = (TextView) view.findViewById(R.id.termek);
-            holder.helye = (TextView) view.findViewById(R.id.helye);
+            holder.minmennyiseg = (TextView) view.findViewById(R.id.minmennyiseg);
             holder.darab = (TextView) view.findViewById(R.id.darab);
             view.setTag(holder);
         } else {
@@ -64,7 +64,7 @@ public class ListViewAdapter extends BaseAdapter {
         }
         // Set the results into TextViews
         holder.termek.setText(stockdatalist.get(position).getTermek());
-        holder.helye.setText(stockdatalist.get(position).getHelye());
+        holder.minmennyiseg.setText(stockdatalist.get(position).getMinDarab());
         holder.darab.setText(stockdatalist.get(position).getDarab());
 
         view.setOnClickListener(new OnClickListener() {

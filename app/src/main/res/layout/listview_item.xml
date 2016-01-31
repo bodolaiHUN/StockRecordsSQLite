@@ -18,32 +18,32 @@
 
 
     <TextView
-        android:id="@+id/helyeLabel"
+        android:id="@+id/minmennyisegLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/termekLabel"
-        android:text="@string/helyeLabel" />
+        android:text="@string/minMennyisegLabel" />
 
     <TextView
-        android:id="@+id/helye"
+        android:id="@+id/minmennyiseg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/termek"
-        android:layout_toRightOf="@+id/helyeLabel"
+        android:layout_toRightOf="@+id/minmennyisegLabel"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/darabLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/helyeLabel"
+        android:layout_below="@+id/minmennyisegLabel"
         android:text="@string/darabLabel" />
 
     <TextView
         android:id="@+id/darab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/helye"
+        android:layout_below="@+id/minmennyiseg"
         android:layout_toRightOf="@+id/darabLabel"
         android:textStyle="bold" />
 

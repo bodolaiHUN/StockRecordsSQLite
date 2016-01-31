@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Stock myStock;
     Termek myTermek;
     TableControllerBarcode myTCB;
+    TableControllerTermek myTCT;
     //ConnectionDetector cd;
 
 
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         myStock = new Stock();
         myTermek = new Termek();
         myBarcode = new Barcode();
-        myTCB = new TableControllerBarcode(this);
+        myTCT = new TableControllerTermek(this);
         resetData();
 
         //cd = new ConnectionDetector(getApplicationContext());                                     // Internet kapcsolat ellenorzese
@@ -88,12 +89,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
                 final Context context = v.getContext();
                 myStock.setBarcode(scanTextView.getText().toString());
-                if (barcodeMarVan != true){
+                if ( !barcodeMarVan && scanTextView.getText() != null){
                     myBarcode.setBarcode(scanTextView.getText().toString());
                     myBarcode.setTermek(termekNeveEditText.getText().toString());
                     myBarcode.setMinDarab(minMennyisegEditText.getText().toString());
-                    Toast.makeText(getApplicationContext(), myBarcode.getMinDarab().toString(), Toast.LENGTH_SHORT).show();
                 }
+                myTermek.setTermek(termekNeveEditText.getText().toString());
                 myStock.setTermek(termekNeveEditText.getText().toString());
                 myStock.setDarab(mennyisegEditText.getText().toString());
                 myStock.setHelye(helyeEditText.getText().toString());
@@ -101,19 +102,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 myStock.setSzavIdo(szavatossagTextView.getText().toString());
                 myStock.setSzavIdoFigyel(szavFigyelTextView.getText().toString());
                 myStock.setErtekeles(ertekelesEditText.getText().toString());
-                boolean createSuccessful = new TableControllerStock(context).create(myStock);
-                //if(createSuccessful){
-                //    Toast.makeText(context, "Sikerult", Toast.LENGTH_SHORT).show();
-                //    resetData();
-                //}else{
-                //    Toast.makeText(context, "Nem sikerult", Toast.LENGTH_SHORT).show();
-                //}
-                boolean createSuccesful = new TableControllerBarcode(context).create(myBarcode);
-                if(createSuccessful){
-                    //Toast.makeText(context, "Barcode OK", Toast.LENGTH_SHORT).show();
+
+                new TableControllerStock(context).create(myStock);
+                if (scanTextView.getText() != null){
+                    new TableControllerBarcode(context).create(myBarcode);
+                }
+                boolean createSuccessfulTermek = new TableControllerTermek(context).create(myTermek);
+                if(createSuccessfulTermek){
+                    Toast.makeText(context, "Termek OK", Toast.LENGTH_SHORT).show();
                     resetData();
                 }else{
-                    Toast.makeText(context, "Barcode nem OK", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Termek nem OK", Toast.LENGTH_SHORT).show();
+                    resetData();
                 }
             }
         });
@@ -189,19 +189,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {                  // Scannelés
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult != null) {
-            scanString = scanResult.getContents();
+        scanString = scanResult.getContents();
+        if (scanString != null) {
             scanTextView.setText(scanString);
-            if (myTCB.checkIfExists(scanString)){
-                termekNeveEditText.setTextColor(Color.BLUE);
-                termekNeveEditText.setText(myTCB.readTermek(scanString)[0]);
-                minMennyisegEditText.setTextColor(Color.BLUE);
-                minMennyisegEditText.setText(myTCB.readTermek(scanString)[1]);
-                //Toast.makeText(getApplicationContext(), ("minDarab: " + myTCB.readTermek(scanString)[1]), Toast.LENGTH_SHORT).show();
-                barcodeMarVan = true;
-            }else {
-                barcodeMarVan = false;
-            }
+            myTCB.checkIfExists(scanString);
+            termekNeveEditText.setTextColor(Color.BLUE);
+            termekNeveEditText.setText(myTCB.readTermek(scanString)[0]);
+            minMennyisegEditText.setTextColor(Color.BLUE);
+            minMennyisegEditText.setText(myTCB.readTermek(scanString)[1]);
+            barcodeMarVan = true;
+        }else {
+            barcodeMarVan = false;
         }
     }
 

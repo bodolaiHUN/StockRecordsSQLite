@@ -50,7 +50,7 @@ public class TableControllerStock extends DatabaseHandler {
 
     public ArrayList<Stock> read() {
 
-        ArrayList<Stock> recordsList = new ArrayList<Stock>();
+        ArrayList<Stock> recordsList = new ArrayList<>();
 
         String sql = "SELECT * FROM " + TABLE_STOCK + " ORDER BY " + STOCK_ID + " DESC";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -92,9 +92,8 @@ public class TableControllerStock extends DatabaseHandler {
 
     public ArrayList<Stock> readCustomQuery(String myQuery) {
 
-        ArrayList<Stock> recordsList = new ArrayList<Stock>();
+        ArrayList<Stock> recordsList = new ArrayList<>();
 
-        String sql = "SELECT * FROM " + TABLE_STOCK + " ORDER BY " + STOCK_ID + " DESC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(myQuery, null);
 

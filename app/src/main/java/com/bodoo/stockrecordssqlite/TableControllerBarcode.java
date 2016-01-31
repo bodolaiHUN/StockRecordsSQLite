@@ -45,7 +45,7 @@ public class TableControllerBarcode extends DatabaseHandler {
 
     public ArrayList<Barcode> read() {
 
-        ArrayList<Barcode> recordsList = new ArrayList<Barcode>();
+        ArrayList<Barcode> recordsList = new ArrayList<>();
 
         String sql = "SELECT * FROM " + TABLE_BARCODE + " ORDER BY " + BARCODE_ID + " DESC";
 
@@ -138,7 +138,7 @@ public class TableControllerBarcode extends DatabaseHandler {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT "+ BARCODE_ID + " FROM " + TABLE_BARCODE + " WHERE " +  BARCODE + "= " + objectName + " ", null);
 
-        if(cursor!=null) {
+        if(cursor!= null) {
 
             if(cursor.getCount()>0) {
                 recordExists = true;

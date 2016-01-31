@@ -43,7 +43,7 @@ public class TableControllerTermek extends DatabaseHandler {
 
     public ArrayList<Termek> read() {
 
-        ArrayList<Termek> recordsList = new ArrayList<Termek>();
+        ArrayList<Termek> recordsList = new ArrayList<>();
 
         String sql = "SELECT * FROM " + TABLE_TERMEK + " ORDER BY " + TERMEK_ID + " DESC";
 
@@ -98,6 +98,31 @@ public class TableControllerTermek extends DatabaseHandler {
         return mTeremek;
     }
 
+    public ArrayList<Termek> getAll() {
+        ArrayList<Termek> items = new ArrayList<>();
+        Termek item;
+        Cursor c = null;
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sql = "SELECT * FROM " + TABLE_TERMEK;
+        try {
+            c = db.rawQuery(sql, null);
+            if (c.moveToFirst()) {
+                do {
+                    item = new Termek();
+                    item.setId(c.getInt(c.getColumnIndex(TERMEK_ID)));
+                    item.setTermek(c.getString(c.getColumnIndex(TERMEK_ITEM)));
+                    items.add(item);
+                } while (c.moveToNext());
+            }
+            return items;
+        }
+        finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+    }
+
     public boolean update(Termek mTermek) {
 
         ContentValues values = new ContentValues();
@@ -136,7 +161,7 @@ public class TableControllerTermek extends DatabaseHandler {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT " + TERMEK_ID + " FROM " + TABLE_TERMEK + " WHERE " + TERMEK_ITEM + " = " + objectName + " ", null);
 
-        if(cursor!=null) {
+        if(cursor!= null) {
 
             if(cursor.getCount()>0) {
                 recordExists = true;
