@@ -37,11 +37,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     String scanString;
     Boolean barcodeMarVan = false;
     static final int DIALOG_ID1 = 1, DIALOG_ID2 = 2;
-    Barcode myBarcode;
-    Stock myStock;
-    Termek myTermek;
-    TableControllerBarcode myTCB;
-    TableControllerTermek myTCT;
+    Barcode myBarcode = new Barcode();
+    Stock myStock = new Stock();
+    Termek myTermek = new Termek();
+    TableControllerBarcode myTCB = new TableControllerBarcode(this);
+    TableControllerTermek myTCT = new TableControllerTermek(this);
     //ConnectionDetector cd;
 
 
@@ -66,10 +66,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         scanTextView = (TextView) findViewById(R.id.scanTextView);
         szavatossagTextView = (TextView) findViewById(R.id.szavatossagTextView);
         szavFigyelTextView = (TextView) findViewById(R.id.szavFigyelTextView);
-        myStock = new Stock();
-        myTermek = new Termek();
-        myBarcode = new Barcode();
-        myTCT = new TableControllerTermek(this);
+
         resetData();
 
         //cd = new ConnectionDetector(getApplicationContext());                                     // Internet kapcsolat ellenorzese
@@ -192,14 +189,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         scanString = scanResult.getContents();
         if (scanString != null) {
             scanTextView.setText(scanString);
-            myTCB.checkIfExists(scanString);
-            termekNeveEditText.setTextColor(Color.BLUE);
-            termekNeveEditText.setText(myTCB.readTermek(scanString)[0]);
-            minMennyisegEditText.setTextColor(Color.BLUE);
-            minMennyisegEditText.setText(myTCB.readTermek(scanString)[1]);
-            barcodeMarVan = true;
-        }else {
-            barcodeMarVan = false;
+            if ( myTCB.checkIfExists(scanString )) {
+                Toast.makeText(this, "barcode van", Toast.LENGTH_SHORT).show();
+                termekNeveEditText.setTextColor(Color.BLUE);
+                termekNeveEditText.setText(myTCB.readTermek(scanString)[0]);
+                minMennyisegEditText.setTextColor(Color.BLUE);
+                minMennyisegEditText.setText(myTCB.readTermek(scanString)[1]);
+                barcodeMarVan = true;
+            }else {
+                Toast.makeText(this, "barcode nincs", Toast.LENGTH_SHORT).show();
+                barcodeMarVan = false;
+            }
         }
     }
 

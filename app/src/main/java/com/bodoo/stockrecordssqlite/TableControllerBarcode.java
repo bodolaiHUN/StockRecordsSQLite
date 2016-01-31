@@ -131,16 +131,16 @@ public class TableControllerBarcode extends DatabaseHandler {
 
     }
 
-    public boolean checkIfExists(String objectName){
+    public boolean checkIfExists(String barcode){
 
         boolean recordExists = false;
 
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT "+ BARCODE_ID + " FROM " + TABLE_BARCODE + " WHERE " +  BARCODE + "= " + objectName + " ", null);
+        Cursor cursor = db.rawQuery("SELECT " + BARCODE_ID + " FROM " + TABLE_BARCODE + " WHERE " +  BARCODE + " = '" + barcode + "' ", null);
 
-        if(cursor!= null) {
+        if ( cursor != null ) {
 
-            if(cursor.getCount()>0) {
+            if ( cursor.getCount() > 0 ) {
                 recordExists = true;
             }
         }

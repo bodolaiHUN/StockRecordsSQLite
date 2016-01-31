@@ -60,13 +60,12 @@ public class LekerdezesActivity extends Activity {
         setContentView(R.layout.listview_main);
         ListView myListView = (ListView) findViewById(R.id.listview);
         ArrayList<Termek> termekList = myTCT.getAll();
-        Toast.makeText(getApplicationContext(), Integer.toString(myTCT.count()), Toast.LENGTH_SHORT).show();
         while (i != myTCT.count()){
             String mQuery = "SELECT * FROM " + DatabaseHandler.TABLE_STOCK + " WHERE " + DatabaseHandler.TERMEK + " = " + "'" + termekList.get(i).getTermek() + "'";
             ArrayList<Stock> stockdatalist = myTCS.readCustomQuery(mQuery);
             for (Stock myStock : stockdatalist){
                 darabInt += Integer.parseInt(myStock.getDarab());
-                //Toast.makeText(getApplicationContext(), Integer.toString(darabInt), Toast.LENGTH_SHORT).show();
+                //TODO: ha a darabszám üres, hiba!!
             }
             Toast.makeText(getApplicationContext(), Integer.toString(i), Toast.LENGTH_SHORT).show();
             myTermek = new Stock();
