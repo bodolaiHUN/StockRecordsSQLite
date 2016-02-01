@@ -1,10 +1,10 @@
 package com.bodoo.stockrecordssqlite;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -19,9 +19,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
-
 import java.util.Calendar;
 
 
@@ -29,26 +26,29 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     Button scanButton, szavatossagButton, szavFigyelButton, lekerdezesButton, elkuldesButton;
     EditText termekNeveEditText, minMennyisegEditText, helyeEditText, mennyisegEditText, ertekelesEditText;
-    TextView scanTextView, szavatossagTextView, szavFigyelTextView;
+    TextView szavatossagTextView, szavFigyelTextView, scanTextView;
     Spinner spinnerQuery;
     int queryString;
     String year_x, month_x, day_x;
     int year, month, day, cur = 0;
-    String scanString;
+    //String scanString;
     Boolean barcodeMarVan = false;
     static final int DIALOG_ID1 = 1, DIALOG_ID2 = 2;
     Barcode myBarcode = new Barcode();
     Stock myStock = new Stock();
     Termek myTermek = new Termek();
+    BarcodeScan bs = new BarcodeScan();
     TableControllerBarcode myTCB = new TableControllerBarcode(this);
-    TableControllerTermek myTCT = new TableControllerTermek(this);
+    //TableControllerTermek myTCT = new TableControllerTermek(this);
     //ConnectionDetector cd;
+    public static Activity activity;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        activity = this;
         spinnerQuery = (Spinner) findViewById(R.id.spinnerQuery);
         spinnerQuery.setOnItemSelectedListener(this);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -93,7 +93,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 myTermek.setTermek(termekNeveEditText.getText().toString());
                 myStock.setTermek(termekNeveEditText.getText().toString());
-                myStock.setDarab(mennyisegEditText.getText().toString());
+                if ( mennyisegEditText.getText().toString().length() == 0 ){
+                    myStock.setDarab("1");
+                } else {
+                    myStock.setDarab(mennyisegEditText.getText().toString());
+                }
                 myStock.setHelye(helyeEditText.getText().toString());
                 myStock.setMinDarab(minMennyisegEditText.getText().toString());
                 myStock.setSzavIdo(szavatossagTextView.getText().toString());
@@ -106,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 boolean createSuccessfulTermek = new TableControllerTermek(context).create(myTermek);
                 if(createSuccessfulTermek){
-                    Toast.makeText(context, "Termek OK", Toast.LENGTH_SHORT).show();
                     resetData();
                 }else{
                     Toast.makeText(context, "Termek nem OK", Toast.LENGTH_SHORT).show();
@@ -114,6 +117,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
         });
+
+
 
         final Calendar cal = Calendar.getInstance();
         year=cal.get(Calendar.YEAR);
@@ -124,43 +129,31 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         addListenerOnButton();
     }
 
+    public void showDialogOnButtonClick(){                                                          // Scan gomb kezelése
+        scanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bs.integrator();
+            }
+        });
+    }
+
     public void onItemSelected(AdapterView<?> parent, View view,                                    // An item was selected. You can retrieve the selected item using
                                int pos, long id) {                                                  // parent.getItemAtPosition(pos)
         String item = parent.getItemAtPosition(pos).toString();
         switch (item) {
             case "Mind" : queryString = 0;
                 break;
-            case "Le fog jarni" : queryString = 1;
+            case "Le fog járni" : queryString = 1;
                 break;
-            case "Keves" : queryString = 2;
+            case "Kevés" : queryString = 2;
                 break;
         }
     }
 
-    public void onNothingSelected(AdapterView<?> parent) {
+    public void onNothingSelected(AdapterView<?> parent) {                                          // Date picker megnyitása
         // Another interface callback
     }
-
-
-    public void showDialogOnButtonClick(){                                                          // Date picker megnyitása
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
-                integrator.initiateScan();
-            }
-        });
-
-        scanButton.setOnClickListener(new View.OnClickListener() {                                  // Scan gomb kezelése
-            @Override
-            public void onClick(View v) {                                                       // Scan gomb kezelése
-                IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
-                integrator.initiateScan();
-            }
-        });
-
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -182,25 +175,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {                  // Scannelés
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        scanString = scanResult.getContents();
-        if (scanString != null) {
-            scanTextView.setText(scanString);
-            if ( myTCB.checkIfExists(scanString )) {
-                Toast.makeText(this, "barcode van", Toast.LENGTH_SHORT).show();
-                termekNeveEditText.setTextColor(Color.BLUE);
-                termekNeveEditText.setText(myTCB.readTermek(scanString)[0]);
-                minMennyisegEditText.setTextColor(Color.BLUE);
-                minMennyisegEditText.setText(myTCB.readTermek(scanString)[1]);
-                barcodeMarVan = true;
-            }else {
-                Toast.makeText(this, "barcode nincs", Toast.LENGTH_SHORT).show();
-                barcodeMarVan = false;
-            }
-        }
     }
 
     public void resetData(){

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +35,7 @@ public class LekerdezesActivity extends Activity {
         lekerdezes();
     }
 
+    //TODO: visszaállítani, ha a következő lista megjelenítése működik
     //@Override
     //protected void onResume() {
     //    super.onResume();
@@ -65,9 +65,7 @@ public class LekerdezesActivity extends Activity {
             ArrayList<Stock> stockdatalist = myTCS.readCustomQuery(mQuery);
             for (Stock myStock : stockdatalist){
                 darabInt += Integer.parseInt(myStock.getDarab());
-                //TODO: ha a darabszám üres, hiba!!
             }
-            Toast.makeText(getApplicationContext(), Integer.toString(i), Toast.LENGTH_SHORT).show();
             myTermek = new Stock();
             myTermek.setTermek(termekList.get(i).getTermek());
             myTermek.setDarab(Integer.toString(darabInt));
