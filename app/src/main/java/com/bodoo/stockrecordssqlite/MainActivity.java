@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 myStock.setTermek(termekNeveEditText.getText().toString());
                 if ( mennyisegEditText.getText().toString().length() == 0 ){
                     myStock.setDarab("1");
+                    Toast.makeText(context, "Nem adtál meg darabszámot!", Toast.LENGTH_SHORT).show();
                 } else {
                     myStock.setDarab(mennyisegEditText.getText().toString());
                 }
