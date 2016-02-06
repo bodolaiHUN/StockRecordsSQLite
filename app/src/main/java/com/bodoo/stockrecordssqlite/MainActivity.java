@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -39,9 +37,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Termek myTermek = new Termek();
     BarcodeScan bs = new BarcodeScan();
     TableControllerBarcode myTCB = new TableControllerBarcode(this);
+    Notifications myNotifications = new Notifications();
     //TableControllerTermek myTCT = new TableControllerTermek(this);
     //ConnectionDetector cd;
     public static Activity activity;
+    //final Context context = this;
 
 
     @Override
@@ -85,6 +85,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View v) {
                 final Context context = v.getContext();
+                if ( termekNeveEditText.getText().toString().length() == 0) {
+                    myNotifications.infoDialog(context, " ", "Nem adtad meg a nevét!", 1);
+                        return;
+                }
+                myStock.setTermek(termekNeveEditText.getText().toString());
+                if ( mennyisegEditText.getText().toString().length() == 0 ) {
+                    myNotifications.infoDialog(context, " ", "Nem adtál meg darabszámot!", 1);
+                        return;
+                }
                 myStock.setBarcode(scanTextView.getText().toString());
                 if ( !barcodeMarVan && scanTextView.getText() != null){
                     myBarcode.setBarcode(scanTextView.getText().toString());
@@ -92,13 +101,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     myBarcode.setMinDarab(minMennyisegEditText.getText().toString());
                 }
                 myTermek.setTermek(termekNeveEditText.getText().toString());
-                myStock.setTermek(termekNeveEditText.getText().toString());
-                if ( mennyisegEditText.getText().toString().length() == 0 ){
-                    myStock.setDarab("1");
-                    Toast.makeText(context, "Nem adtál meg darabszámot!", Toast.LENGTH_SHORT).show();
-                } else {
-                    myStock.setDarab(mennyisegEditText.getText().toString());
-                }
                 myStock.setHelye(helyeEditText.getText().toString());
                 myStock.setMinDarab(minMennyisegEditText.getText().toString());
                 myStock.setSzavIdo(szavatossagTextView.getText().toString());
@@ -154,28 +156,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void onNothingSelected(AdapterView<?> parent) {                                          // Date picker megnyitása
         // Another interface callback
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void resetData(){
