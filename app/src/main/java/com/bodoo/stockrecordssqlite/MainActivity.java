@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     myNotifications.infoDialog(context, " ", "Nem adtál meg darabszámot!", 1);
                         return;
                 }
+                myStock.setDarab(mennyisegEditText.getText().toString());
                 myStock.setBarcode(scanTextView.getText().toString());
                 if ( !barcodeMarVan && scanTextView.getText() != null){
                     myBarcode.setBarcode(scanTextView.getText().toString());

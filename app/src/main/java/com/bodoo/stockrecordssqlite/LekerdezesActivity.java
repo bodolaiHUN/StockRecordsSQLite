@@ -12,7 +12,7 @@ import java.util.Calendar;
 public class LekerdezesActivity extends Activity {
     // Declare Variables
     ListViewAdapter adapter;
-    String today;
+    String today, selectedItem;
     private DatabaseHandler mClass = new DatabaseHandler(this);
     public ArrayList termekList = new ArrayList<>();
     public ArrayList termekek = new ArrayList<>();
@@ -29,10 +29,15 @@ public class LekerdezesActivity extends Activity {
         super.onCreate(savedInstanceState);
         Intent i = getIntent();
         queryString = i.getIntExtra("queryString", queryString);
+        selectedItem = i.getStringExtra("termek");
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         today = df.format(c.getTime());
-        lekerdezes();
+        if (queryString == 3){
+            lekerdezes(3);
+        }else {
+            lekerdezes();
+        }
     }
 
     //TODO: visszaállítani, ha a következő lista megjelenítése működik
@@ -45,7 +50,8 @@ public class LekerdezesActivity extends Activity {
     public void lekerdezes(int queryString){
         String[] mQuery = {"SELECT * FROM " + DatabaseHandler.TABLE_STOCK + " ORDER BY " + DatabaseHandler.STOCK_ID + " DESC",
                 "SELECT * FROM " + DatabaseHandler.TABLE_STOCK + " WHERE " + DatabaseHandler.SZAV_IDO_FIGYEL + " >= " + today,
-                "SELECT * FROM " + DatabaseHandler.TABLE_STOCK + " WHERE " + DatabaseHandler.DARAB + " < " + DatabaseHandler.MIN_DARAB};
+                "SELECT * FROM " + DatabaseHandler.TABLE_STOCK + " WHERE " + DatabaseHandler.DARAB + " < " + DatabaseHandler.MIN_DARAB,
+                "SELECT * FROM " + DatabaseHandler.TABLE_STOCK + " WHERE " + DatabaseHandler.TERMEK + " = '" + selectedItem + "'"};
         // Get the view from listview_main.xml
         setContentView(R.layout.listview_main);
         ListView myListView = (ListView) findViewById(R.id.listview);

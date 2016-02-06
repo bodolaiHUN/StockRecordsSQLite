@@ -71,23 +71,10 @@ public class ListViewAdapter extends BaseAdapter {
 
             @Override
             public void onClick(View arg0) {
-                // Send single item click data to SingleItemView Class
-                Intent intent = new Intent(context, SingleItemView.class);
-                intent.putExtra("id",
-                        (stockdatalist.get(position).getId()));
+                Intent intent = new Intent(context, LekerdezesActivity.class);
                 intent.putExtra("termek",
                         (stockdatalist.get(position).getTermek()));
-                intent.putExtra("helye",
-                        (stockdatalist.get(position).getHelye()));
-                intent.putExtra("darab",
-                        (stockdatalist.get(position).getDarab()));
-                intent.putExtra("minDarab",
-                        (stockdatalist.get(position).getMinDarab()));
-                intent.putExtra("szavatossag",
-                        (stockdatalist.get(position).getSzavIdoFigyel()));
-                intent.putExtra("ertekeles",
-                        (stockdatalist.get(position).getErtekeles()));
-                // Start SingleItemView Class
+                intent.putExtra("queryString", 3);
                 context.startActivity(intent);
             }
         });
