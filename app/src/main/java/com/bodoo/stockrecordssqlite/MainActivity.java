@@ -15,7 +15,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -116,7 +115,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if(createSuccessfulTermek){
                     resetData();
                 }else{
-                    Toast.makeText(context, "Termek nem OK", Toast.LENGTH_SHORT).show();
                     resetData();
                 }
             }

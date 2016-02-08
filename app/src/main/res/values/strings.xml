@@ -21,4 +21,5 @@
         <item>Le fog jarni</item>
         <item>Keves</item>
     </string-array>
+    <string name="title_activity_lekerdezes_new">LekerdezesNew</string>
 </resources>

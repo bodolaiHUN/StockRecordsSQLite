@@ -27,9 +27,13 @@
         <activity
             android:name=".LekerdezesActivity"
             android:label="@string/title_activity_lekerdezes"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SingleItemView"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".LekerdezesNew"
+            android:label="@string/title_activity_lekerdezes_new"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
