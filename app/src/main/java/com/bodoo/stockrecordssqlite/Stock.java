@@ -5,7 +5,7 @@ package com.bodoo.stockrecordssqlite;
  */
 public class Stock {
 
-    private int id;
+    private int id, count;
     private String termek;
     private String helye;
     private String darab;
@@ -14,6 +14,7 @@ public class Stock {
     private String szavIdoFigyel;
     private String barcode;
     private String ertekeles;
+    private Stock childern;
 
     public int getId() {
         return id;
@@ -22,6 +23,10 @@ public class Stock {
     public void setId(int id) {
         this.id = id;
     }
+
+    public int getCount() {return count; }
+
+    public void setCount(int count) {this.count = count; }
 
     public String getTermek() {
         return termek;
@@ -87,4 +92,7 @@ public class Stock {
         this.ertekeles = ertekeles;
     }
 
+    public Stock getChildern() {return childern;}
+
+    public void setChildern(Stock childern) {this.childern = childern;}
 }

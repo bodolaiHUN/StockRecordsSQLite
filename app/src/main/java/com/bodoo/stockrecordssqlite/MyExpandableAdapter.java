@@ -3,25 +3,20 @@ package com.bodoo.stockrecordssqlite;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckedTextView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MyExpandableAdapter extends BaseExpandableListAdapter implements View.OnLongClickListener{
+public class MyExpandableAdapter extends BaseExpandableListAdapter {
 
     private Activity activity;
-    private ArrayList<Object> childItems;
+    private ArrayList<Stock> parentItems;
     private LayoutInflater inflater;
-    private ArrayList<String> parentItems, child;
-    TableControllerStock mStock = new TableControllerStock(this);
 
-    public MyExpandableAdapter(ArrayList<String> parents, ArrayList<Object> childern) {
+    public MyExpandableAdapter(ArrayList<Stock> parents) {             //parents: termekek,
         this.parentItems = parents;
-        this.childItems = childern;
     }
 
     public void setInflater(LayoutInflater inflater, Activity activity) {
@@ -30,59 +25,54 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter implements Vi
     }
 
     @Override
-    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View view, ViewGroup parent) {
 
-        child = (ArrayList<String>) childItems.get(groupPosition);
+        ViewHolderChildern holder = new ViewHolderChildern();
+        holder.groupPosition = groupPosition;
+        holder.childPosition = childPosition;
 
-        TextView textView = null;
-
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.listview_singleitem, null);
+        if (view == null) {
+            view = inflater.inflate(R.layout.listview_singleitem, parent, false);
         }
 
-        //textView = (TextView) convertView.findViewById(R.id.textView1);
-        //textView.setText(child.get(childPosition));
+        holder.termek = (TextView) view.findViewById(R.id.termek);
+        holder.helye = (TextView) view.findViewById(R.id.helye);
+        holder.minmennyiseg = (TextView) view.findViewById(R.id.minmennyiseg);
+        holder.darab = (TextView) view.findViewById(R.id.darab);
+        holder.ertekeles = (TextView) view.findViewById(R.id.ertekeles);
+        holder.szavIdo = (TextView) view.findViewById(R.id.szavatossag);
+        view.setTag(holder);
 
-        // Locate the TextViews in singleitemview.xml
-        TextView txttermek = convertView.findViewById(R.id.termek);
-        txttermek.setOnLongClickListener(this);
-        TextView txthelye = convertView.findViewById(R.id.helye);
-        TextView txtdarab = convertView.findViewById(R.id.darab);
-        TextView txtmindarab = convertView.findViewById(R.id.minmennyiseg);
-        TextView txtszavatossag = convertView.findViewById(R.id.szavatossag);
-        TextView txtertekeles = convertView.findViewById(R.id.ertekeles);
+        holder.termek.setText(parentItems.get(groupPosition).getChildern().getTermek());
+        holder.helye.setText(parentItems.get(groupPosition).getChildern().getHelye());
+        holder.minmennyiseg.setText(parentItems.get(groupPosition).getChildern().getMinDarab());
+        holder.darab.setText(parentItems.get(groupPosition).getChildern().getDarab());
 
-        // Set results to the TextViews
-        txttermek.setText(termek);
-        txthelye.setText(helye);
-        txtdarab.setText(darab);
-        txtmindarab.setText(minDarab);
-        txtszavatossag.setText(szavatossag);
-        txtertekeles.setText(ertekeles);
-
-        convertView.setOnClickListener(new OnClickListener() {
-
-            public boolean onLongClick(View arg0) {
-                mStock.delete(id);
-                this.finish();
-                return false;
-            }
-        });
-
-        return convertView;
+        //return the entire view
+        return view;
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+    public View getGroupView(int groupPosition, boolean b, View view, ViewGroup viewGroup) {
 
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.listview_item, null);
+        ViewHolderGroup holder = new ViewHolderGroup();
+        holder.groupPosition = groupPosition;
+
+        if (view == null) {
+            view = inflater.inflate(R.layout.listview_item, viewGroup, false);
         }
 
-        ((CheckedTextView) convertView).setText(parentItems.get(groupPosition));
-        ((CheckedTextView) convertView).setChecked(isExpanded);
+        holder.termek = (TextView) view.findViewById(R.id.termek);
+        holder.minmennyiseg = (TextView) view.findViewById(R.id.minmennyiseg);
+        holder.darab = (TextView) view.findViewById(R.id.darab);
+        view.setTag(holder);
 
-        return convertView;
+        holder.termek.setText(parentItems.get(groupPosition).getTermek());
+        holder.minmennyiseg.setText(parentItems.get(groupPosition).getMinDarab());
+        holder.darab.setText(parentItems.get(groupPosition).getDarab());
+
+        //return the entire view
+        return view;
     }
 
     @Override
@@ -97,7 +87,7 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter implements Vi
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return ((ArrayList<String>) childItems.get(groupPosition)).size();
+        return parentItems.get(groupPosition).getCount();
     }
 
     @Override
@@ -133,6 +123,26 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter implements Vi
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
+    }
+
+    protected class ViewHolderGroup {
+        protected int childPosition;
+        protected int groupPosition;
+        TextView termek;
+        TextView darab;
+        TextView minmennyiseg;
+    }
+
+    protected class ViewHolderChildern {
+        protected int childPosition;
+        protected int groupPosition;
+        TextView termek;
+        TextView helye;
+        TextView darab;
+        TextView minmennyiseg;
+        TextView ertekeles;
+        TextView barcode;
+        TextView szavIdo;
     }
 
 }

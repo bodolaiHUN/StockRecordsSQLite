@@ -8,6 +8,7 @@
     <TableRow>
 
         <TextView
+            android:background="@color/backgroundBlue"
             android:id="@+id/termekLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,6 +32,7 @@
     <TableRow>
 
         <TextView
+            android:background="@color/backgroundBlue"
             android:id="@+id/helyeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,7 +47,7 @@
     </TableRow>
     <TableRow>
         <TextView
-
+            android:background="@color/backgroundBlue"
             android:id="@+id/szavatossagLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,6 +63,7 @@
     <TableRow>
 
         <TextView
+            android:background="@color/backgroundBlue"
             android:id="@+id/darabLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,6 +78,7 @@
     </TableRow>
     <TableRow>
         <TextView
+            android:background="@color/backgroundBlue"
             android:id="@+id/minmennyisegLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,6 +94,7 @@
     <TableRow>
 
         <TextView
+            android:background="@color/backgroundBlue"
             android:id="@+id/ertekelesLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

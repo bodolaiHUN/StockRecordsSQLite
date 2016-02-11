@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         lekerdezesButton.setOnClickListener(new View.OnClickListener() {                            // Lekérdezés activity megnyitása
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), LekerdezesActivity.class);
+                Intent intent = new Intent(getApplicationContext(), LekerdezesNew.class);
                 intent.putExtra("queryString", queryString);
                 startActivity(intent);
             }
