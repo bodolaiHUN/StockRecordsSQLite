@@ -86,7 +86,8 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return 0;
+        long id = parentItems.get(groupPosition).getChildern().getId();
+        return id;
     }
 
     @Override
@@ -126,7 +127,7 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
+        return true;
     }
 
     protected class ViewHolderGroup {

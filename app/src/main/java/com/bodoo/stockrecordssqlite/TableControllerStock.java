@@ -240,7 +240,7 @@ public class TableControllerStock extends DatabaseHandler {
 
     }
 
-    public boolean delete(int id) {
+    public boolean delete(long id) {
         boolean deleteSuccessful = false;
 
         SQLiteDatabase db = this.getWritableDatabase();
