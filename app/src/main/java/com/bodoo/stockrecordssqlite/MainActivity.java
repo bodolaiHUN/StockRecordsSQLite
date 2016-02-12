@@ -5,8 +5,10 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,6 +17,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.Calendar;
 
@@ -28,19 +33,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     int queryString;
     String year_x, month_x, day_x;
     int year, month, day, cur = 0;
-    //String scanString;
+    String scanString;
     Boolean barcodeMarVan = false;
     static final int DIALOG_ID1 = 1, DIALOG_ID2 = 2;
     Barcode myBarcode = new Barcode();
     Stock myStock = new Stock();
     Termek myTermek = new Termek();
-    BarcodeScan bs = new BarcodeScan();
     TableControllerBarcode myTCB = new TableControllerBarcode(this);
     Notifications myNotifications = new Notifications();
-    //TableControllerTermek myTCT = new TableControllerTermek(this);
-    //ConnectionDetector cd;
     public static Activity activity;
-    //final Context context = this;
+    //ConnectionDetector cd;
+
 
 
     @Override
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), LekerdezesNew.class);
-                intent.putExtra("queryString", queryString);
+                //intent.putExtra("queryString", queryString);
                 startActivity(intent);
             }
         });
@@ -135,7 +138,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bs.integrator();
+                //bs.integrator();
+                IntentIntegrator integrator = new IntentIntegrator(MainActivity.this);
+                integrator.initiateScan();
             }
         });
     }
@@ -254,5 +259,24 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         }
     };
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {                  // Scannelés
+        Log.e("onActivity", "q");
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            scanString = scanResult.getContents();
+            scanTextView.setText(scanString);
+            if (myTCB.checkIfExists(scanString)){
+                termekNeveEditText.setTextColor(Color.BLUE);
+                termekNeveEditText.setText(myTCB.readTermek(scanString)[0]);
+                minMennyisegEditText.setTextColor(Color.BLUE);
+                minMennyisegEditText.setText(myTCB.readTermek(scanString)[1]);
+                //Toast.makeText(getApplicationContext(), ("minDarab: " + myTCB.readTermek(scanString)[1]), Toast.LENGTH_SHORT).show();
+                barcodeMarVan = true;
+            }else {
+                barcodeMarVan = false;
+            }
+        }
+    }
 
 }

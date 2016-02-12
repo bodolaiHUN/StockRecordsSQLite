@@ -5,7 +5,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -79,4 +82,6 @@ public class LekerdezesNew extends ExpandableListActivity {
             i++;
         }
     }
+
+
 }

@@ -41,12 +41,16 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
         holder.darab = (TextView) view.findViewById(R.id.darab);
         holder.ertekeles = (TextView) view.findViewById(R.id.ertekeles);
         holder.szavIdo = (TextView) view.findViewById(R.id.szavatossag);
+        holder.barcode = (TextView) view.findViewById(R.id.barcode);
         view.setTag(holder);
 
         holder.termek.setText(parentItems.get(groupPosition).getChildern().getTermek());
         holder.helye.setText(parentItems.get(groupPosition).getChildern().getHelye());
         holder.minmennyiseg.setText(parentItems.get(groupPosition).getChildern().getMinDarab());
         holder.darab.setText(parentItems.get(groupPosition).getChildern().getDarab());
+        holder.ertekeles.setText(parentItems.get(groupPosition).getChildern().getErtekeles());
+        holder.szavIdo.setText(parentItems.get(groupPosition).getChildern().getSzavIdo());
+        holder.barcode.setText(parentItems.get(groupPosition).getChildern().getBarcode());
 
         //return the entire view
         return view;

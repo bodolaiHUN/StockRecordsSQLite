@@ -7,12 +7,13 @@
     <string name="title_activity_lekerdezes">A készlet</string>
     <string name="title_activity_lekerdezes_uj">LekerdezesUjActivity</string>
     <string name="menu_settings">Settings</string>
-    <string name="termek">"   Termék : "</string>
-    <string name="helyeLabel">"   Helye : "</string>
-    <string name="darabLabel">"   Mennyiség : "</string>
-    <string name="minMennyisegLabel">"   Min. mennyiség : "</string>
-    <string name="szavatossagLabel">"   Szavatosság : "</string>
-    <string name="ertekelesLabel">"   Értékelés : "</string>
+    <string name="termekLabel">"        Termék : "</string>
+    <string name="helyeLabel">"        Helye : "</string>
+    <string name="darabLabel">"        Mennyiség : "</string>
+    <string name="minMennyisegLabel">"        Min. mennyiség : "</string>
+    <string name="szavatossagLabel">"        Szavatosság : "</string>
+    <string name="ertekelesLabel">"        Értékelés : "</string>
+    <string name="barcodeLabel">"        Barcode: "</string>
     <string name="space">"     "</string>
     <string name="spinner_title">Mit listazzak?</string>
 
