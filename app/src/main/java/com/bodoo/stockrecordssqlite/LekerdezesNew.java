@@ -5,7 +5,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,6 +21,8 @@ public class LekerdezesNew extends ExpandableListActivity {
     public ArrayList stockdata = new ArrayList<>();
     TableControllerTermek myTCT = new TableControllerTermek(this);
     TableControllerStock myTCS = new TableControllerStock(this);
+    MyExpandableAdapter adapter = new MyExpandableAdapter( termekek );
+    Notifications myNotifications = new Notifications();
     Stock myTermek, myChild;
 
 
@@ -33,11 +38,24 @@ public class LekerdezesNew extends ExpandableListActivity {
 
         lekerdezesGroup();                                                                          //termekek
 
-        MyExpandableAdapter adapter = new MyExpandableAdapter( termekek );
-
         adapter.setInflater((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), this);
         expandableList.setAdapter(adapter);
-        expandableList.setOnChildClickListener(this);
+        //expandableList.setOnChildClickListener(this);
+
+        expandableList = getExpandableListView();
+
+        expandableList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                // TODO A törlés nem működik, a kijelzést frissíteni kell!
+                Toast.makeText(getBaseContext(), Long.toString(adapter.getChildId(groupPosition, childPosition)), Toast.LENGTH_SHORT).show();
+                if (myNotifications.infoDialog(LekerdezesNew.this, "Törlés ", "Valóban törölni akarod?", 2)){
+                    myTCS.delete(adapter.getChildId(groupPosition, childPosition));
+                }
+                lekerdezesGroup();
+                return true;
+            }
+        });
+
 
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -83,4 +101,6 @@ public class LekerdezesNew extends ExpandableListActivity {
             i++;
         }
     }
+
+
 }
