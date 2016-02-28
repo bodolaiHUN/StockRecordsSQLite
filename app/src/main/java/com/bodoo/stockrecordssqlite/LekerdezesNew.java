@@ -54,26 +54,30 @@ public class LekerdezesNew extends ExpandableListActivity {
             for (Stock myStock : stockdatalist){
                 darabInt += Integer.parseInt(myStock.getDarab());
                 myChild = new Stock();
-                myChild.setId(stockdatalist.get(j).getId());
-                myChild.setTermek(stockdatalist.get(j).getTermek());
-                myChild.setHelye(stockdatalist.get(j).getHelye());
-                myChild.setDarab(stockdatalist.get(j).getDarab());
-                myChild.setMinDarab(stockdatalist.get(j).getMinDarab());
-                myChild.setBarcode(stockdatalist.get(j).getBarcode());
-                myChild.setSzavIdo(stockdatalist.get(j).getSzavIdo());
-                myChild.setErtekeles(stockdatalist.get(j).getErtekeles());
-                stockdata.add(myChild);
+                myChild.setId(myStock.getId());
+                myChild.setTermek(myStock.getTermek());
+                myChild.setHelye(myStock.getHelye());
+                myChild.setDarab(myStock.getDarab());
+                myChild.setMinDarab(myStock.getMinDarab());
+                myChild.setBarcode(myStock.getBarcode());
+                myChild.setSzavIdo(myStock.getSzavIdo());
+                myChild.setErtekeles(myStock.getErtekeles());
+                if (stockdata.add(myChild)){
+                    Log.d("stockdata", "ok");
+                }
+                Log.d("stockdata", Integer.toString(stockdata.size()));
+                Log.d("darab", myStock.getDarab());
                 j++;
             }
             myTermek = new Stock();
             myTermek.setTermek(termekList.get(i).getTermek());
             myTermek.setDarab(Integer.toString(darabInt));
             myTermek.setMinDarab(stockdatalist.get(0).getMinDarab());
-            myTermek.setChildern(myChild);
+            myTermek.setArrayChildren(stockdata);
             myTermek.setCount(j);
             termekek.add(myTermek);
             Log.e("termek", myTermek.getTermek());
-            Log.e("childCount", Integer.toString(myTermek.getCount()));
+            Log.e("childCount", Integer.toString(myTermek.childrenSize()));
             darabInt = 0;
             j = 0;
             i++;

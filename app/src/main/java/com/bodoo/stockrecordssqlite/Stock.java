@@ -1,5 +1,7 @@
 package com.bodoo.stockrecordssqlite;
 
+import java.util.ArrayList;
+
 /**
  * Created by bodoo on 2015.12.29..
  */
@@ -14,7 +16,7 @@ public class Stock {
     private String szavIdoFigyel;
     private String barcode;
     private String ertekeles;
-    private Stock childern;
+    private ArrayList<Stock> childern = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -92,7 +94,9 @@ public class Stock {
         this.ertekeles = ertekeles;
     }
 
-    public Stock getChildern() {return childern;}
+    public Stock getArrayChildren(int position) { return childern.get(position); }
 
-    public void setChildern(Stock childern) {this.childern = childern;}
+    public void setArrayChildren(ArrayList<Stock> arrayChildren) { this.childern = arrayChildren; }
+
+    public int childrenSize() { return this.childern.size(); }
 }
