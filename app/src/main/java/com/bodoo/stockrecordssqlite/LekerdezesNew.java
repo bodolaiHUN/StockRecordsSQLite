@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -18,7 +17,7 @@ public class LekerdezesNew extends ExpandableListActivity {
     // Declare Variables
     String today;
     public ArrayList termekek = new ArrayList<>();
-    public ArrayList stockdata = new ArrayList<>();
+	ArrayList stockdata;
     TableControllerTermek myTCT = new TableControllerTermek(this);
     TableControllerStock myTCS = new TableControllerStock(this);
     MyExpandableAdapter adapter = new MyExpandableAdapter( termekek );
@@ -40,18 +39,20 @@ public class LekerdezesNew extends ExpandableListActivity {
 
         adapter.setInflater((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), this);
         expandableList.setAdapter(adapter);
-        //expandableList.setOnChildClickListener(this);
-
-        expandableList = getExpandableListView();
+        expandableList.setOnChildClickListener(this);
 
         expandableList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 // TODO A törlés nem működik, a kijelzést frissíteni kell!
                 Toast.makeText(getBaseContext(), Long.toString(adapter.getChildId(groupPosition, childPosition)), Toast.LENGTH_SHORT).show();
-                if (myNotifications.infoDialog(LekerdezesNew.this, "Törlés ", "Valóban törölni akarod?", 2)){
-                    myTCS.delete(adapter.getChildId(groupPosition, childPosition));
-                }
-                lekerdezesGroup();
+                //if (myNotifications.infoDialog(LekerdezesNew.this, "Törlés ", "Valóban törölni akarod?", 2)){
+                //    myTCS.delete(adapter.getChildId(groupPosition, childPosition));
+                //}
+	            //myTCS.delete(adapter.getChildId(groupPosition, childPosition));
+	            //finish();
+	            //startActivity(getIntent());
+                //lekerdezesGroup();
+	            //adapter.notifyDataSetChanged();
                 return true;
             }
         });
@@ -65,6 +66,7 @@ public class LekerdezesNew extends ExpandableListActivity {
 
     public void lekerdezesGroup(){
         int darabInt = 0, i = 0, j = 0;
+	    stockdata = new ArrayList<>();
         ArrayList<Termek> termekList = myTCT.getAll();
         while (i != myTCT.count()){
             String mQuery = "SELECT * FROM " + DatabaseHandler.TABLE_STOCK + " WHERE " + DatabaseHandler.TERMEK + " = " + "'" + termekList.get(i).getTermek() + "'";
@@ -84,7 +86,7 @@ public class LekerdezesNew extends ExpandableListActivity {
                     Log.d("stockdata", "ok");
                 }
                 Log.d("stockdata", Integer.toString(stockdata.size()));
-                Log.d("darab", myStock.getDarab());
+                Log.d("child_termek", myStock.getTermek());
                 j++;
             }
             myTermek = new Stock();
@@ -94,13 +96,12 @@ public class LekerdezesNew extends ExpandableListActivity {
             myTermek.setArrayChildren(stockdata);
             myTermek.setCount(j);
             termekek.add(myTermek);
-            Log.e("termek", myTermek.getTermek());
+            Log.e("parent_termek", myTermek.getTermek());
             Log.e("childCount", Integer.toString(myTermek.childrenSize()));
             darabInt = 0;
             j = 0;
+	        stockdata = new ArrayList<>();
             i++;
         }
     }
-
-
 }

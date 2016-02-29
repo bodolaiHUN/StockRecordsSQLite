@@ -244,7 +244,7 @@ public class TableControllerStock extends DatabaseHandler {
         boolean deleteSuccessful = false;
 
         SQLiteDatabase db = this.getWritableDatabase();
-        deleteSuccessful = db.delete(TABLE_STOCK, STOCK_ID + " ='" + id + "'", null) > 0;
+        deleteSuccessful = db.delete(TABLE_STOCK, STOCK_ID + " = '" + id + "'", null) > 0;
         db.close();
 
         return deleteSuccessful;

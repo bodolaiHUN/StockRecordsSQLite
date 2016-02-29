@@ -41,12 +41,16 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
         holder.darab = (TextView) view.findViewById(R.id.darab);
         holder.ertekeles = (TextView) view.findViewById(R.id.ertekeles);
         holder.szavIdo = (TextView) view.findViewById(R.id.szavatossag);
+	    holder.barcode = (TextView) view.findViewById(R.id.barcode);
         view.setTag(holder);
 
         holder.termek.setText(parentItems.get(groupPosition).getArrayChildren(childPosition).getTermek());
         holder.helye.setText(parentItems.get(groupPosition).getArrayChildren(childPosition).getHelye());
         holder.minmennyiseg.setText(parentItems.get(groupPosition).getArrayChildren(childPosition).getMinDarab());
         holder.darab.setText(parentItems.get(groupPosition).getArrayChildren(childPosition).getDarab());
+	    holder.barcode.setText(parentItems.get(groupPosition).getArrayChildren(childPosition).getBarcode());
+		holder.szavIdo.setText(parentItems.get(groupPosition).getArrayChildren(childPosition).getSzavIdo());
+	    holder.ertekeles.setText(parentItems.get(groupPosition).getArrayChildren(childPosition).getErtekeles());
 
         //return the entire view
         return view;
@@ -82,7 +86,7 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return 0;
+        return Long.valueOf(parentItems.get(groupPosition).getArrayChildren(childPosition).getId());                                                                                   //
     }
 
     @Override
@@ -122,7 +126,7 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
+        return true;
     }
 
     protected class ViewHolderGroup {

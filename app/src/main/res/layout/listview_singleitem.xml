@@ -11,15 +11,13 @@
             android:id="@+id/termekLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/termekLabel" />
+            android:text="@string/termekLabel"/>
 
         <TextView
             android:id="@+id/termek"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:onClick="onClick"
-            android:clickable="true"/>
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/space0"
