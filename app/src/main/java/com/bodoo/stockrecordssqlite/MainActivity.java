@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     int queryString;
     String year_x, month_x, day_x;
     int year, month, day, cur = 0;
-    String scanString;
+    String scanString, year_LW, month_LW, day_LW;
     Boolean barcodeMarVan = false;
     static final int DIALOG_ID1 = 1, DIALOG_ID2 = 2;
     Barcode myBarcode = new Barcode();
@@ -229,9 +229,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         public void onDateSet(DatePicker view, int selectedYear,
                               int selectedMonth, int selectedDay) {
 
+	        Calendar c = Calendar.getInstance();
+	        c.set(selectedYear, selectedMonth, selectedDay);
+	        c.add(Calendar.WEEK_OF_YEAR, -1);
+
             year_x = String.valueOf(selectedYear);
             month_x = String.valueOf(selectedMonth+1);
             day_x = String.valueOf(selectedDay);
+	        year_LW = String.valueOf(c.get(Calendar.YEAR));
+	        month_LW = String.valueOf(c.get(Calendar.MONTH)+1);
+	        day_LW = String.valueOf(c.get(Calendar.DAY_OF_MONTH));
+
 
             if(cur == DIALOG_ID1){
                 if(Integer.valueOf (month_x) < 10){
@@ -244,6 +252,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 // set selected date into textview
                 szavatossagTextView.setText(year_x + "-" + month_x + "-" + day_x);
+	            if(Integer.valueOf (month_LW) < 10){
+
+		            month_LW = "0" + month_LW;
+	            }
+	            if(Integer.valueOf (day_LW) < 10){
+
+		            day_LW  = "0" + day_LW ;
+	            }
+	            // set selected date into textview
+	            szavFigyelTextView.setText(year_LW + "-" + month_LW + "-" + day_LW);
             }
             else{
                 if(Integer.valueOf (month_x) < 10){
