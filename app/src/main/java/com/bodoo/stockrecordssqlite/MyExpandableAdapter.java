@@ -14,6 +14,10 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
     private Activity activity;
     private ArrayList<Stock> parentItems;
     private LayoutInflater inflater;
+	TableControllerTermek myTCT = new TableControllerTermek(MyApplication.getAppContext());
+	TableControllerStock myTCS = new TableControllerStock(MyApplication.getAppContext());
+	Termek myTermek;
+	String termek;
 
     public MyExpandableAdapter(ArrayList<Stock> parents) {             //parents: termekek,
         this.parentItems = parents;
@@ -80,8 +84,8 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
-        return null;
+    public Stock getChild(int groupPosition, int childPosition) {
+	    return parentItems.get(groupPosition).getArrayChildren(childPosition);
     }
 
     @Override
@@ -123,6 +127,14 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
     public boolean hasStableIds() {
         return false;
     }
+
+	public void removeGroup(int groupPosition) {
+
+	}
+
+	public void removeChildFromGroup(int groupPosition, int childPosition) {
+
+	}
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {

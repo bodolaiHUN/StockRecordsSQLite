@@ -143,7 +143,7 @@ public class TableControllerTermek extends DatabaseHandler {
 
     }
 
-    public boolean delete(int id) {
+    public boolean delete(long id) {
         boolean deleteSuccessful = false;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -153,6 +153,17 @@ public class TableControllerTermek extends DatabaseHandler {
         return deleteSuccessful;
 
     }
+
+	public boolean delete(String termek) {
+		boolean deleteSuccessful = false;
+
+		SQLiteDatabase db = this.getWritableDatabase();
+		deleteSuccessful = db.delete(TABLE_TERMEK, TERMEK_ITEM + " ='" + termek + "'", null) > 0;
+		db.close();
+
+		return deleteSuccessful;
+
+	}
 
     public boolean checkIfExists(String objectName){
 

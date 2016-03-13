@@ -99,4 +99,8 @@ public class Stock {
     public void setArrayChildren(ArrayList<Stock> arrayChildren) { this.childern = arrayChildren; }
 
     public int childrenSize() { return this.childern.size(); }
+
+	public void removeChild(int position){
+		this.childern.remove(position);
+	}
 }

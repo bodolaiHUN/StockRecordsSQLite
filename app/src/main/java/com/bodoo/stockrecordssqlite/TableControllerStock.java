@@ -96,34 +96,36 @@ public class TableControllerStock extends DatabaseHandler {
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(myQuery, null);
+	    if (cursor != null) {
+		    if (cursor.moveToFirst()) {
+			    do {
 
-        if (cursor.moveToFirst()) {
-            do {
+				    int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(STOCK_ID)));
+				    String termek = cursor.getString(cursor.getColumnIndex(TERMEK));
+				    String helye = cursor.getString(cursor.getColumnIndex(HELYE));
+				    String darab = cursor.getString(cursor.getColumnIndex(DARAB));
+				    String minDarab = cursor.getString(cursor.getColumnIndex(MIN_DARAB));
+				    String szavIdo = cursor.getString(cursor.getColumnIndex(SZAV_IDO));
+				    String szavIdoFigyel = cursor.getString(cursor.getColumnIndex(SZAV_IDO_FIGYEL));
+				    String barcode = cursor.getString(cursor.getColumnIndex(BARCODE_STOCK));
+				    String ertekeles = cursor.getString(cursor.getColumnIndex(ERTEKELES));
 
-                int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(STOCK_ID)));
-                String termek = cursor.getString(cursor.getColumnIndex(TERMEK));
-                String helye = cursor.getString(cursor.getColumnIndex(HELYE));
-                String darab = cursor.getString(cursor.getColumnIndex(DARAB));
-                String minDarab = cursor.getString(cursor.getColumnIndex(MIN_DARAB));
-                String szavIdo = cursor.getString(cursor.getColumnIndex(SZAV_IDO));
-                String szavIdoFigyel = cursor.getString(cursor.getColumnIndex(SZAV_IDO_FIGYEL));
-                String barcode = cursor.getString(cursor.getColumnIndex(BARCODE_STOCK));
-                String ertekeles = cursor.getString(cursor.getColumnIndex(ERTEKELES));
+				    stock = new Stock();
+				    stock.setId(id);
+				    stock.setTermek(termek);
+				    stock.setHelye(helye);
+				    stock.setDarab(darab);
+				    stock.setMinDarab(minDarab);
+				    stock.setSzavIdo(szavIdo);
+				    stock.setSzavIdoFigyel(szavIdoFigyel);
+				    stock.setBarcode(barcode);
+				    stock.setErtekeles(ertekeles);
+				    recordsList.add(stock);
 
-                stock = new Stock();
-                stock.setId(id);
-                stock.setTermek(termek);
-                stock.setHelye(helye);
-                stock.setDarab(darab);
-                stock.setMinDarab(minDarab);
-                stock.setSzavIdo(szavIdo);
-                stock.setSzavIdoFigyel(szavIdoFigyel);
-                stock.setBarcode(barcode);
-                stock.setErtekeles(ertekeles);
-                recordsList.add(stock);
+			    } while (cursor.moveToNext());
+		    }
+	    }
 
-            } while (cursor.moveToNext());
-        }
 
         cursor.close();
         db.close();

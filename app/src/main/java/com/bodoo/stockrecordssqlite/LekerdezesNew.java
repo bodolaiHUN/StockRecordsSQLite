@@ -3,11 +3,9 @@ package com.bodoo.stockrecordssqlite;
 import android.app.ExpandableListActivity;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,16 +41,17 @@ public class LekerdezesNew extends ExpandableListActivity {
 
         expandableList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                // TODO A törlés nem működik, a kijelzést frissíteni kell!
-                Toast.makeText(getBaseContext(), Long.toString(adapter.getChildId(groupPosition, childPosition)), Toast.LENGTH_SHORT).show();
                 //if (myNotifications.infoDialog(LekerdezesNew.this, "Törlés ", "Valóban törölni akarod?", 2)){
                 //    myTCS.delete(adapter.getChildId(groupPosition, childPosition));
                 //}
-	            //myTCS.delete(adapter.getChildId(groupPosition, childPosition));
-	            //finish();
-	            //startActivity(getIntent());
-                //lekerdezesGroup();
-	            //adapter.notifyDataSetChanged();
+	            if (adapter.getChildrenCount(groupPosition)>1){
+		            myTCS.delete(adapter.getChildId(groupPosition, childPosition));
+	            }else{
+		            myTCT.delete(adapter.getChild(groupPosition, childPosition).getTermek());
+		            myTCS.delete(adapter.getChildId(groupPosition, childPosition));
+	            }
+	            finish();
+	            startActivity(getIntent());
                 return true;
             }
         });
@@ -82,22 +81,16 @@ public class LekerdezesNew extends ExpandableListActivity {
                 myChild.setBarcode(myStock.getBarcode());
                 myChild.setSzavIdo(myStock.getSzavIdo());
                 myChild.setErtekeles(myStock.getErtekeles());
-                if (stockdata.add(myChild)){
-                    Log.d("stockdata", "ok");
-                }
-                Log.d("stockdata", Integer.toString(stockdata.size()));
-                Log.d("child_termek", myStock.getTermek());
+                stockdata.add(myChild);
                 j++;
             }
             myTermek = new Stock();
             myTermek.setTermek(termekList.get(i).getTermek());
             myTermek.setDarab(Integer.toString(darabInt));
-            myTermek.setMinDarab(stockdatalist.get(0).getMinDarab());
+//            myTermek.setMinDarab(stockdatalist.get(0).getMinDarab());                               //get(0)
             myTermek.setArrayChildren(stockdata);
             myTermek.setCount(j);
             termekek.add(myTermek);
-            Log.e("parent_termek", myTermek.getTermek());
-            Log.e("childCount", Integer.toString(myTermek.childrenSize()));
             darabInt = 0;
             j = 0;
 	        stockdata = new ArrayList<>();
