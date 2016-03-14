@@ -2,9 +2,12 @@ package com.bodoo.stockrecordssqlite;
 
 import android.app.ExpandableListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 
 import java.text.SimpleDateFormat;
@@ -37,31 +40,61 @@ public class LekerdezesNew extends ExpandableListActivity {
 
         adapter.setInflater((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), this);
         expandableList.setAdapter(adapter);
-        expandableList.setOnChildClickListener(this);
 
-        expandableList.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                //if (myNotifications.infoDialog(LekerdezesNew.this, "Törlés ", "Valóban törölni akarod?", 2)){
-                //    myTCS.delete(adapter.getChildId(groupPosition, childPosition));
-                //}
-	            if (adapter.getChildrenCount(groupPosition)>1){
-		            myTCS.delete(adapter.getChildId(groupPosition, childPosition));
-	            }else{
-		            myTCT.delete(adapter.getChild(groupPosition, childPosition).getTermek());
-		            myTCS.delete(adapter.getChildId(groupPosition, childPosition));
-	            }
-	            finish();
-	            startActivity(getIntent());
-                return true;
-            }
-        });
+	    getExpandableListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
+		    @Override
+		    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+			    long packedPosition = getExpandableListView().getExpandableListPosition(position);
+			    if (ExpandableListView.getPackedPositionType(packedPosition) == ExpandableListView.PACKED_POSITION_TYPE_CHILD) {
+				    // get item ID's
+				    int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+				    int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
 
-        Calendar c = Calendar.getInstance();
+				    removeItemFromList(childPosition, groupPosition);
+			    }
+			    return true;
+		    }
+	    });
+
+		    Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         today = df.format(c.getTime());
 
     }
+
+	protected void removeItemFromList(int groupPosition, int childPosition) {
+		final int gPosition = groupPosition;
+		final int cPosition = childPosition;
+
+		AlertDialog.Builder alert = new AlertDialog.Builder(LekerdezesNew.this);
+
+		alert.setTitle("Törlés");
+		alert.setMessage("Valóban törlöd ezt a terméket?");
+		alert.setPositiveButton("Igen", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				if (adapter.getChildrenCount(gPosition) > 1) {
+					myTCS.delete(adapter.getChildId(gPosition, cPosition));
+				} else {
+					myTCT.delete(adapter.getChild(gPosition, cPosition).getTermek());
+					myTCS.delete(adapter.getChildId(gPosition, cPosition));
+				}
+				finish();
+				startActivity(getIntent());
+			}
+		});
+		alert.setNegativeButton("Mégsem", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+
+		alert.show();
+
+	}
+
 
     public void lekerdezesGroup(){
         int darabInt = 0, i = 0, j = 0;
