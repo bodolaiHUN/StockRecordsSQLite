@@ -1,6 +1,8 @@
 package com.bodoo.stockrecordssqlite;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,12 +73,17 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
         }
 
         holder.termek = (TextView) view.findViewById(R.id.termek);
-        holder.minmennyiseg = (TextView) view.findViewById(R.id.minmennyiseg);
         holder.darab = (TextView) view.findViewById(R.id.darab);
         view.setTag(holder);
 
         holder.termek.setText(parentItems.get(groupPosition).getTermek());
-        holder.minmennyiseg.setText(parentItems.get(groupPosition).getMinDarab());
+	    if ((Integer.parseInt(parentItems.get(groupPosition).getDarab())) < Integer.parseInt(parentItems.get(groupPosition).getMinDarab()) && Integer.parseInt(parentItems.get(groupPosition).getMinDarab()) != 1000){
+		    holder.darab.setTextColor(Color.RED);
+	    }else{
+		    holder.darab.setTextColor(Color.BLACK);
+	    }
+	    Log.d("darab", parentItems.get(groupPosition).getDarab());
+	    Log.d("minDarab", parentItems.get(groupPosition).getMinDarab());
         holder.darab.setText(parentItems.get(groupPosition).getDarab());
 
         //return the entire view
@@ -146,7 +153,6 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
         protected int groupPosition;
         TextView termek;
         TextView darab;
-        TextView minmennyiseg;
     }
 
     protected class ViewHolderChildern {

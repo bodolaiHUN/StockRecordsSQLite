@@ -97,20 +97,25 @@ public class LekerdezesNew extends ExpandableListActivity {
 
 
     public void lekerdezesGroup(){
-        int darabInt = 0, i = 0, j = 0;
+        int darabInt = 0, minDarab = 1000, i = 0, j = 0;
 	    stockdata = new ArrayList<>();
         ArrayList<Termek> termekList = myTCT.getAll();
         while (i != myTCT.count()){
             String mQuery = "SELECT * FROM " + DatabaseHandler.TABLE_STOCK + " WHERE " + DatabaseHandler.TERMEK + " = " + "'" + termekList.get(i).getTermek() + "'";
             ArrayList<Stock> stockdatalist = myTCS.readCustomQuery(mQuery);
-            for (Stock myStock : stockdatalist){
-                darabInt += Integer.parseInt(myStock.getDarab());
-                myChild = new Stock();
-                myChild.setId(myStock.getId());
-                myChild.setTermek(myStock.getTermek());
-                myChild.setHelye(myStock.getHelye());
-                myChild.setDarab(myStock.getDarab());
-                myChild.setMinDarab(myStock.getMinDarab());
+            for (Stock myStock : stockdatalist) {
+	            darabInt += Integer.parseInt(myStock.getDarab());
+	            myChild = new Stock();
+	            myChild.setId(myStock.getId());
+	            myChild.setTermek(myStock.getTermek());
+	            myChild.setHelye(myStock.getHelye());
+	            myChild.setDarab(myStock.getDarab());
+	            myChild.setMinDarab(myStock.getMinDarab());
+	            if (myStock.getMinDarab().length() != 0){
+		            if (Integer.parseInt(myStock.getMinDarab()) < minDarab) {
+			            minDarab = Integer.parseInt(myStock.getMinDarab());
+		            }
+                 }
                 myChild.setBarcode(myStock.getBarcode());
                 myChild.setSzavIdo(myStock.getSzavIdo());
                 myChild.setErtekeles(myStock.getErtekeles());
@@ -120,11 +125,14 @@ public class LekerdezesNew extends ExpandableListActivity {
             myTermek = new Stock();
             myTermek.setTermek(termekList.get(i).getTermek());
             myTermek.setDarab(Integer.toString(darabInt));
-//            myTermek.setMinDarab(stockdatalist.get(0).getMinDarab());                               //get(0)
+	        if (minDarab != 0) {
+		        myTermek.setMinDarab(Integer.toString(minDarab));
+	        }
             myTermek.setArrayChildren(stockdata);
             myTermek.setCount(j);
             termekek.add(myTermek);
             darabInt = 0;
+	        minDarab = 1000;
             j = 0;
 	        stockdata = new ArrayList<>();
             i++;

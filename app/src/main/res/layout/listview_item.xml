@@ -7,44 +7,33 @@
         android:id="@+id/termekLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/termekLabel" />
+        android:text="@string/termekLabel"
+        android:textSize="20dp"/>
 
     <TextView
         android:id="@+id/termek"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/termekLabel"
-        android:textStyle="bold" />
-
-
-    <TextView
-        android:id="@+id/minmennyisegLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/termekLabel"
-        android:text="@string/minMennyisegLabel" />
-
-    <TextView
-        android:id="@+id/minmennyiseg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/termek"
-        android:layout_toRightOf="@+id/minmennyisegLabel"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textSize="20dp"/>
 
     <TextView
         android:id="@+id/darabLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/minmennyisegLabel"
-        android:text="@string/darabLabel" />
+        android:text="@string/darabLabel"
+        android:layout_below="@+id/termekLabel"
+        android:layout_alignParentStart="true"
+        android:textSize="20dp"/>
 
     <TextView
         android:id="@+id/darab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/minmennyiseg"
-        android:layout_toRightOf="@+id/darabLabel"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_below="@+id/termek"
+        android:layout_toEndOf="@+id/darabLabel"
+        android:textSize="20dp"/>
 
 </RelativeLayout>
