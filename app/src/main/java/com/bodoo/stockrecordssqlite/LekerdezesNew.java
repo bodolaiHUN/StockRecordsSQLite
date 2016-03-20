@@ -67,7 +67,7 @@ public class LekerdezesNew extends ExpandableListActivity {
 		int groupPosition = ExpandableListView.getPackedPositionGroup(info.packedPosition);
 		int childPosition = ExpandableListView.getPackedPositionChild(info.packedPosition);
 		if (item.getTitle() == "Törlés") {
-			Toast.makeText(this, "Action 1 invoked", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "törlés", Toast.LENGTH_SHORT).show();
 			removeItemFromList(groupPosition, childPosition);
 		} else if (item.getTitle() == "Módosítás") {
 			Toast.makeText(this, "nemsoká jön... :-)", Toast.LENGTH_SHORT).show();
