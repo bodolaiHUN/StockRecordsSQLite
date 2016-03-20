@@ -70,7 +70,7 @@ public class LekerdezesNew extends ExpandableListActivity {
 			Toast.makeText(this, "Action 1 invoked", Toast.LENGTH_SHORT).show();
 			removeItemFromList(groupPosition, childPosition);
 		} else if (item.getTitle() == "Módosítás") {
-			Toast.makeText(this, "coming soon... :-)", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "nemsoká... :-)", Toast.LENGTH_SHORT).show();
 		} else {
 			return false;
 		}
