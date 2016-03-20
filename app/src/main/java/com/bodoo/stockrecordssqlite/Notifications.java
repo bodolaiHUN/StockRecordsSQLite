@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 class Notifications {
 
     boolean buttonValue; // = false;
+	String resultText = "";
 
     public boolean infoDialog(Context ctx, String title, String message, int buttonNumber) {
         AlertDialog.Builder b = new AlertDialog.Builder(ctx);
