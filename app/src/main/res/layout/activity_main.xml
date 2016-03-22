@@ -131,10 +131,10 @@
         android:id="@+id/elkuldesButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/szavFigyelButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:text="    Elküldés    "/>
+        android:text="    Elküldés    "
+        />
 
     <Button
         android:id="@+id/szavFigyelButton"
@@ -162,5 +162,13 @@
         android:layout_below="@+id/szavFigyelButton"
         android:prompt="@string/spinner_title"
         android:spinnerMode="dropdown"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Törlés"
+        android:id="@+id/torlesButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

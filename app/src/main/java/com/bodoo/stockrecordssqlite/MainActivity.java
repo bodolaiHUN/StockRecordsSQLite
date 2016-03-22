@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 	static final int DIALOG_ID1 = 1, DIALOG_ID2 = 2;
 	public static Activity activity;
-	Button scanButton, szavatossagButton, szavFigyelButton, lekerdezesButton, elkuldesButton;
+	Button scanButton, szavatossagButton, szavFigyelButton, lekerdezesButton, elkuldesButton, torlesButton;
     EditText termekNeveEditText, minMennyisegEditText, helyeEditText, mennyisegEditText, ertekelesEditText;
     TextView szavatossagTextView, szavFigyelTextView, scanTextView;
     Spinner spinnerQuery;
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     String year_x, month_x, day_x;
 	int year, month, day, cur = 0, layout;
 	String scanString, year_LW, month_LW, day_LW;
+	String setTermek, setDarab, setMinDarab, setBarcode, setHelye, setErtekeles, setSzavIdo, setSzavIdoFigyel;
     Boolean barcodeMarVan = false;
     Barcode myBarcode = new Barcode();
     Stock myStock = new Stock();
@@ -114,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         scanButton = (Button) findViewById(R.id.scanButton);
         lekerdezesButton = (Button) findViewById(R.id.lekerdezesButton);
         elkuldesButton = (Button) findViewById(R.id.elkuldesButton);
+	    torlesButton = (Button) findViewById(R.id.torlesButton);
         termekNeveEditText = (EditText) findViewById(R.id.termekNeveEditText);
 	    termekNeveEditText.setOnClickListener(new View.OnClickListener() {
 		    @Override
@@ -170,44 +172,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         elkuldesButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                final Context context = v.getContext();
-	            if (termekNeveEditText.getText().toString().length() == 0) {
-		            myNotifications.infoDialog(context, " ", "Nem adtad meg a nevét!", 1);
-                        return;
-                }
-	            myStock.setTermek(termekNeveEditText.getText().toString());
-	            if ( mennyisegEditText.getText().toString().length() == 0 ) {
-                    myNotifications.infoDialog(context, " ", "Nem adtál meg darabszámot!", 1);
-                        return;
-                }
-                myStock.setDarab(mennyisegEditText.getText().toString());
-                myStock.setBarcode(scanTextView.getText().toString());
-                if ( !barcodeMarVan && scanTextView.getText() != null){
-                    myBarcode.setBarcode(scanTextView.getText().toString());
-                    myBarcode.setTermek(termekNeveEditText.getText().toString());
-                    myBarcode.setMinDarab(minMennyisegEditText.getText().toString());
-                }
-                myTermek.setTermek(termekNeveEditText.getText().toString());
-                myStock.setHelye(helyeEditText.getText().toString());
-                myStock.setMinDarab(minMennyisegEditText.getText().toString());
-                myStock.setSzavIdo(szavatossagTextView.getText().toString());
-                myStock.setSzavIdoFigyel(szavFigyelTextView.getText().toString());
-                myStock.setErtekeles(ertekelesEditText.getText().toString());
+	            final Context context = v.getContext();
 
-                new TableControllerStock(context).create(myStock);
-                if (scanTextView.getText() != null){
-                    new TableControllerBarcode(context).create(myBarcode);
-                }
-                boolean createSuccessfulTermek = new TableControllerTermek(context).create(myTermek);
-                if(createSuccessfulTermek){
-                    resetData();
-                }else{
-                    resetData();
-                }
+	            setTermek = (termekNeveEditText.getText().toString());
+	            setDarab = (mennyisegEditText.getText().toString());
+	            setBarcode = (scanTextView.getText().toString());
+	            setTermek = (termekNeveEditText.getText().toString());
+	            setMinDarab = (minMennyisegEditText.getText().toString());
+	            setSzavIdo = (szavatossagTextView.getText().toString());
+	            setSzavIdoFigyel = (szavFigyelTextView.getText().toString());
+	            setErtekeles = (ertekelesEditText.getText().toString());
+
+                elküldés(context);
             }
         });
 
-
+	    torlesButton.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View v) {
+			    resetData();
+		    }
+	    });
 
         final Calendar cal = Calendar.getInstance();
         year=cal.get(Calendar.YEAR);
@@ -217,6 +202,69 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         showDialogOnButtonClick();
         addListenerOnButton();
     }
+
+	public void elküldés(Context context){
+		if (termekNeveEditText.getText().toString().length() == 0) {
+			myNotifications.infoDialog(context, " ", "Nem adtad meg a nevét!", 1);
+			return;
+		}
+		myStock.setTermek(setTermek);
+		if ( mennyisegEditText.getText().toString().length() == 0 ) {
+			myNotifications.infoDialog(context, " ", "Nem adtál meg darabszámot!", 1);
+			return;
+		}
+		myStock.setDarab(setDarab);
+		myStock.setBarcode(setBarcode);
+		if ( !barcodeMarVan && scanTextView.getText() != null){
+			myBarcode.setBarcode(setBarcode);
+			myBarcode.setTermek(setTermek);
+			myBarcode.setMinDarab(setMinDarab);
+		}
+		myTermek.setTermek(setTermek);
+		myStock.setHelye(setHelye);
+		myStock.setMinDarab(setMinDarab);
+		myStock.setSzavIdo(setSzavIdo);
+		myStock.setSzavIdoFigyel(setSzavIdoFigyel);
+		myStock.setErtekeles(setErtekeles);
+
+		new TableControllerStock(context).create(myStock);
+		if (scanTextView.getText() != null){
+			new TableControllerBarcode(context).create(myBarcode);
+		}
+		boolean createSuccessfulTermek = new TableControllerTermek(context).create(myTermek);
+		if(createSuccessfulTermek){
+			resetData();
+		}else{
+			resetData();
+		}
+	}
+
+	public void elküldés(String[] data){
+		myStock.setTermek(data[0]);
+		myStock.setDarab(data[1]);
+		myStock.setBarcode(data[2]);
+		myBarcode.setBarcode(data[2]);
+		myBarcode.setTermek(data[0]);
+		myBarcode.setMinDarab(data[3]);
+		myTermek.setTermek(data[0]);
+		myStock.setHelye(data[4]);
+		myStock.setMinDarab(data[3]);
+		myStock.setSzavIdo(data[5]);
+		myStock.setSzavIdoFigyel(data[6]);
+		myStock.setErtekeles(data[8]);
+		Context context = MyApplication.getAppContext();
+
+		new TableControllerStock(context).create(myStock);
+		if (scanTextView.getText() != null){
+			new TableControllerBarcode(context).create(myBarcode);
+		}
+		boolean createSuccessfulTermek = new TableControllerTermek(context).create(myTermek);
+		if(createSuccessfulTermek){
+			resetData();
+		}else{
+			resetData();
+		}
+	}
 
     public void showDialogOnButtonClick(){                                                          // Scan gomb kezelése
         scanButton.setOnClickListener(new View.OnClickListener() {
