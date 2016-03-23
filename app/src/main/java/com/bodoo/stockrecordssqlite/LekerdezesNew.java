@@ -18,8 +18,10 @@ import java.util.Calendar;
 
 public class LekerdezesNew extends ExpandableListActivity {
     // Declare Variables
-    String today;
-    public ArrayList termekek = new ArrayList<>();
+    String today, termek, darab, barcode, minDarab, helye, szavIdo, szavIdoFigy, ertekeles;
+	long id;
+	int darabInt;
+	public ArrayList termekek = new ArrayList<>();
 	ArrayList stockdata;
     TableControllerTermek myTCT = new TableControllerTermek(this);
     TableControllerStock myTCS = new TableControllerStock(this);
@@ -57,7 +59,7 @@ public class LekerdezesNew extends ExpandableListActivity {
 
 		menu.setHeaderTitle("Válassz:");
 		menu.add(0, v.getId(), 0, "Törlés");
-		menu.add(0, v.getId(), 0, "Módosítás");
+		menu.add(0, v.getId(), 0, "Módosítás (-1)");
 	}
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
@@ -69,8 +71,26 @@ public class LekerdezesNew extends ExpandableListActivity {
 		if (item.getTitle() == "Törlés") {
 			Toast.makeText(this, "törlés", Toast.LENGTH_SHORT).show();
 			removeItemFromList(groupPosition, childPosition);
-		} else if (item.getTitle() == "Módosítás") {
-			Toast.makeText(this, "nemsoká jön... :-)", Toast.LENGTH_SHORT).show();
+		} else if (item.getTitle() == "Módosítás (-1)") {
+			darabInt = Integer.valueOf(adapter.getChild(groupPosition, childPosition).getDarab());
+			if (darabInt <= 1) {
+				removeItemFromList(groupPosition, childPosition);
+				return true;
+			} else {
+				Stock stock = new Stock();
+				stock.setId(adapter.getChild(groupPosition, childPosition).getId());
+				stock.setTermek(adapter.getChild(groupPosition, childPosition).getTermek());
+				stock.setDarab(Integer.toString(darabInt - 1));
+				stock.setBarcode(adapter.getChild(groupPosition, childPosition).getBarcode());
+				stock.setMinDarab(adapter.getChild(groupPosition, childPosition).getMinDarab());
+				stock.setHelye(adapter.getChild(groupPosition, childPosition).getHelye());
+				stock.setSzavIdo(adapter.getChild(groupPosition, childPosition).getSzavIdo());
+				stock.setSzavIdoFigyel(adapter.getChild(groupPosition, childPosition).getSzavIdoFigyel());
+				stock.setErtekeles(adapter.getChild(groupPosition, childPosition).getErtekeles());
+				new TableControllerStock(this).update(stock);
+			}
+			finish();
+			startActivity(getIntent());
 		} else {
 			return false;
 		}

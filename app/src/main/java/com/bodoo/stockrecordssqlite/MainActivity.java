@@ -47,6 +47,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     TableControllerBarcode myTCB = new TableControllerBarcode(this);
     Notifications myNotifications = new Notifications();
     //ConnectionDetector cd;
+
+	public static final int TERMEK = 0, DARAB = 1, BARCODE = 2, MIN_DARAB = 3, HELYE = 4, SZAV_IDO = 5, SZAV_IDO_FIGYEL = 6, ERTEKELES = 7;
+
     private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 
 	    // when dialog box is closed, below method will be called.
@@ -240,18 +243,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 	}
 
 	public void elküldés(String[] data){
-		myStock.setTermek(data[0]);
-		myStock.setDarab(data[1]);
-		myStock.setBarcode(data[2]);
-		myBarcode.setBarcode(data[2]);
-		myBarcode.setTermek(data[0]);
-		myBarcode.setMinDarab(data[3]);
-		myTermek.setTermek(data[0]);
-		myStock.setHelye(data[4]);
-		myStock.setMinDarab(data[3]);
-		myStock.setSzavIdo(data[5]);
-		myStock.setSzavIdoFigyel(data[6]);
-		myStock.setErtekeles(data[8]);
+		myStock.setTermek(data[TERMEK]);
+		myStock.setDarab(data[DARAB]);
+		myStock.setBarcode(data[BARCODE]);
+		myBarcode.setBarcode(data[BARCODE]);
+		myBarcode.setTermek(data[TERMEK]);
+		myBarcode.setMinDarab(data[MIN_DARAB]);
+		myTermek.setTermek(data[TERMEK]);
+		myStock.setHelye(data[HELYE]);
+		myStock.setMinDarab(data[MIN_DARAB]);
+		myStock.setSzavIdo(data[SZAV_IDO]);
+		myStock.setSzavIdoFigyel(data[SZAV_IDO_FIGYEL]);
+		myStock.setErtekeles(data[ERTEKELES]);
 		Context context = MyApplication.getAppContext();
 
 		new TableControllerStock(context).create(myStock);
