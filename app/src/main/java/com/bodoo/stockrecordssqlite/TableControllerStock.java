@@ -27,6 +27,8 @@ public class TableControllerStock extends DatabaseHandler {
         values.put(SZAV_IDO_FIGYEL, stock.getSzavIdoFigyel());
         values.put(BARCODE_STOCK, stock.getBarcode());
         values.put(ERTEKELES, stock.getErtekeles());
+	    values.put(MEGJEGYZES, " ");
+	    values.put(BEV_LISTABA, "N");
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -68,6 +70,8 @@ public class TableControllerStock extends DatabaseHandler {
                 String szavIdoFigyel = cursor.getString(cursor.getColumnIndex(SZAV_IDO_FIGYEL));
                 String barcode = cursor.getString(cursor.getColumnIndex(BARCODE_STOCK));
                 String ertekeles = cursor.getString(cursor.getColumnIndex(ERTEKELES));
+	            String megjegyzes = cursor.getString(cursor.getColumnIndex(MEGJEGYZES));
+	            String bevListaba = cursor.getString(cursor.getColumnIndex(BEV_LISTABA));
 
                 stock = new Stock();
                 stock.setId(id);
@@ -79,7 +83,9 @@ public class TableControllerStock extends DatabaseHandler {
                 stock.setSzavIdoFigyel(szavIdoFigyel);
                 stock.setBarcode(barcode);
                 stock.setErtekeles(ertekeles);
-                recordsList.add(stock);
+	            stock.setMegjegyzes(megjegyzes);
+	            stock.setBevListaba(bevListaba);
+	            recordsList.add(stock);
 
             } while (cursor.moveToNext());
         }
@@ -109,6 +115,8 @@ public class TableControllerStock extends DatabaseHandler {
 				    String szavIdoFigyel = cursor.getString(cursor.getColumnIndex(SZAV_IDO_FIGYEL));
 				    String barcode = cursor.getString(cursor.getColumnIndex(BARCODE_STOCK));
 				    String ertekeles = cursor.getString(cursor.getColumnIndex(ERTEKELES));
+				    String megjegyzes = cursor.getString(cursor.getColumnIndex(MEGJEGYZES));
+				    String bevListaba = cursor.getString(cursor.getColumnIndex(BEV_LISTABA));
 
 				    stock = new Stock();
 				    stock.setId(id);
@@ -120,6 +128,8 @@ public class TableControllerStock extends DatabaseHandler {
 				    stock.setSzavIdoFigyel(szavIdoFigyel);
 				    stock.setBarcode(barcode);
 				    stock.setErtekeles(ertekeles);
+				    stock.setMegjegyzes(megjegyzes);
+				    stock.setBevListaba(bevListaba);
 				    recordsList.add(stock);
 
 			    } while (cursor.moveToNext());
@@ -131,88 +141,6 @@ public class TableControllerStock extends DatabaseHandler {
         db.close();
 
         return recordsList;
-    }
-
-    public Stock readSingleRecord(int stockId) {
-
-        Stock stock = null;
-
-        String sql = "SELECT * FROM " + TABLE_STOCK + " WHERE " + STOCK_ID + " = " + stockId;
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(sql, null);
-
-        if (cursor.moveToFirst()) {
-
-            int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(STOCK_ID)));
-            String termek = cursor.getString(cursor.getColumnIndex(TERMEK));
-            String helye = cursor.getString(cursor.getColumnIndex(HELYE));
-            String darab = cursor.getString(cursor.getColumnIndex(DARAB));
-            String minDarab = cursor.getString(cursor.getColumnIndex(MIN_DARAB));
-            String szavIdo = cursor.getString(cursor.getColumnIndex(SZAV_IDO));
-            String szavIdoFigyel = cursor.getString(cursor.getColumnIndex(SZAV_IDO_FIGYEL));
-            String barcode = cursor.getString(cursor.getColumnIndex(BARCODE_STOCK));
-            String ertekeles = cursor.getString(cursor.getColumnIndex(ERTEKELES));
-
-            stock = new Stock();
-            stock.setId(id);
-            stock.setTermek(termek);
-            stock.setHelye(helye);
-            stock.setDarab(darab);
-            stock.setMinDarab(minDarab);
-            stock.setSzavIdo(szavIdo);
-            stock.setSzavIdoFigyel(szavIdoFigyel);
-            stock.setBarcode(barcode);
-            stock.setErtekeles(ertekeles);
-
-        }
-
-        cursor.close();
-        db.close();
-
-        return stock;
-    }
-
-    public Stock readSingleItem(String item) {
-
-        Stock stock = null;
-
-        String sql = "SELECT * FROM " + TABLE_STOCK + " WHERE " + TERMEK + " = " + item;
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery(sql, null);
-
-        if (cursor.moveToFirst()) {
-
-            int id = Integer.parseInt(cursor.getString(cursor.getColumnIndex(STOCK_ID)));
-            String termek = cursor.getString(cursor.getColumnIndex(TERMEK));
-            String helye = cursor.getString(cursor.getColumnIndex(HELYE));
-            String darab = cursor.getString(cursor.getColumnIndex(DARAB));
-            String minDarab = cursor.getString(cursor.getColumnIndex(MIN_DARAB));
-            String szavIdo = cursor.getString(cursor.getColumnIndex(SZAV_IDO));
-            String szavIdoFigyel = cursor.getString(cursor.getColumnIndex(SZAV_IDO_FIGYEL));
-            String barcode = cursor.getString(cursor.getColumnIndex(BARCODE_STOCK));
-            String ertekeles = cursor.getString(cursor.getColumnIndex(ERTEKELES));
-
-            stock = new Stock();
-            stock.setId(id);
-            stock.setTermek(termek);
-            stock.setHelye(helye);
-            stock.setDarab(darab);
-            stock.setMinDarab(minDarab);
-            stock.setSzavIdo(szavIdo);
-            stock.setSzavIdoFigyel(szavIdoFigyel);
-            stock.setBarcode(barcode);
-            stock.setErtekeles(ertekeles);
-
-        }
-
-        cursor.close();
-        db.close();
-
-        return stock;
     }
 
     public boolean update(Stock stock) {
@@ -228,6 +156,8 @@ public class TableControllerStock extends DatabaseHandler {
         values.put(SZAV_IDO_FIGYEL, stock.getSzavIdoFigyel());
         values.put(BARCODE_STOCK, stock.getBarcode());
         values.put(ERTEKELES, stock.getErtekeles());
+	    values.put(MEGJEGYZES, stock.getMegjegyzes());
+	    values.put(BEV_LISTABA, stock.getBevListaba());
 
         String where = STOCK_ID + " = ?";
 
@@ -239,7 +169,6 @@ public class TableControllerStock extends DatabaseHandler {
         db.close();
 
         return updateSuccessful;
-
     }
 
     public boolean delete(long id) {
@@ -250,7 +179,5 @@ public class TableControllerStock extends DatabaseHandler {
         db.close();
 
         return deleteSuccessful;
-
     }
-
 }

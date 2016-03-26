@@ -9,6 +9,7 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
@@ -18,7 +19,7 @@ import java.util.Calendar;
 
 public class LekerdezesNew extends ExpandableListActivity {
     // Declare Variables
-    String today, termek, darab, barcode, minDarab, helye, szavIdo, szavIdoFigy, ertekeles;
+    String today, termek, minMennyiseg, megjegyzes;
 	long id;
 	int darabInt;
 	public ArrayList termekek = new ArrayList<>();
@@ -26,8 +27,8 @@ public class LekerdezesNew extends ExpandableListActivity {
     TableControllerTermek myTCT = new TableControllerTermek(this);
     TableControllerStock myTCS = new TableControllerStock(this);
     MyExpandableAdapter adapter = new MyExpandableAdapter( termekek );
-    Notifications myNotifications = new Notifications();
-    Stock myTermek, myChild;
+	Stock myTermek, myChild, result;
+
 
 
     @Override
@@ -60,37 +61,39 @@ public class LekerdezesNew extends ExpandableListActivity {
 		menu.setHeaderTitle("Válassz:");
 		menu.add(0, v.getId(), 0, "Törlés");
 		menu.add(0, v.getId(), 0, "Módosítás (-1)");
+		menu.add(0, v.getId(), 0, "Bevásárló listába");
 	}
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		ExpandableListView.ExpandableListContextMenuInfo info = (ExpandableListView.ExpandableListContextMenuInfo) item
 				.getMenuInfo();
 		int type = ExpandableListView.getPackedPositionType(info.packedPosition);
-		int groupPosition = ExpandableListView.getPackedPositionGroup(info.packedPosition);
-		int childPosition = ExpandableListView.getPackedPositionChild(info.packedPosition);
+		final int groupPosition = ExpandableListView.getPackedPositionGroup(info.packedPosition);
+		final int childPosition = ExpandableListView.getPackedPositionChild(info.packedPosition);
 		if (item.getTitle() == "Törlés") {
 			Toast.makeText(this, "törlés", Toast.LENGTH_SHORT).show();
 			removeItemFromList(groupPosition, childPosition);
+
 		} else if (item.getTitle() == "Módosítás (-1)") {
 			darabInt = Integer.valueOf(adapter.getChild(groupPosition, childPosition).getDarab());
 			if (darabInt <= 1) {
 				removeItemFromList(groupPosition, childPosition);
 				return true;
 			} else {
-				Stock stock = new Stock();
-				stock.setId(adapter.getChild(groupPosition, childPosition).getId());
-				stock.setTermek(adapter.getChild(groupPosition, childPosition).getTermek());
-				stock.setDarab(Integer.toString(darabInt - 1));
-				stock.setBarcode(adapter.getChild(groupPosition, childPosition).getBarcode());
-				stock.setMinDarab(adapter.getChild(groupPosition, childPosition).getMinDarab());
-				stock.setHelye(adapter.getChild(groupPosition, childPosition).getHelye());
-				stock.setSzavIdo(adapter.getChild(groupPosition, childPosition).getSzavIdo());
-				stock.setSzavIdoFigyel(adapter.getChild(groupPosition, childPosition).getSzavIdoFigyel());
-				stock.setErtekeles(adapter.getChild(groupPosition, childPosition).getErtekeles());
-				new TableControllerStock(this).update(stock);
+				writeStock(groupPosition, childPosition, 0, "");
 			}
 			finish();
 			startActivity(getIntent());
+
+		} else if (item.getTitle() == "Bevásárló listába") {
+			promptForResult(" ", "Megjegyzés a termékhez:", 0, new PromptRunnable() {
+				// put whatever code you want to run after user enters a result
+				public void run() {
+					// get the value we stored from the dialog
+					String value = this.getValue();
+					writeStock(groupPosition, childPosition, 1, value);
+				}
+			});
 		} else {
 			return false;
 		}
@@ -100,14 +103,8 @@ public class LekerdezesNew extends ExpandableListActivity {
 	protected void removeItemFromList(int groupPosition, int childPosition) {
 		final int gPosition = groupPosition;
 		final int cPosition = childPosition;
-
-		AlertDialog.Builder alert = new AlertDialog.Builder(LekerdezesNew.this);
-
-		alert.setTitle("Törlés");
-		alert.setMessage("Valóban törlöd ezt a terméket?");
-		alert.setPositiveButton("Igen", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
+		promptForResult("Törlés", "Valóban törölni akarod?", 1, new PromptRunnable() {
+			public void run() {
 				if (adapter.getChildrenCount(gPosition) > 1) {
 					myTCS.delete(adapter.getChildId(gPosition, cPosition));
 				} else {
@@ -118,15 +115,6 @@ public class LekerdezesNew extends ExpandableListActivity {
 				startActivity(getIntent());
 			}
 		});
-		alert.setNegativeButton("Mégsem", new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.dismiss();
-			}
-		});
-
-		alert.show();
-
 	}
 
 
@@ -153,7 +141,9 @@ public class LekerdezesNew extends ExpandableListActivity {
                 myChild.setBarcode(myStock.getBarcode());
                 myChild.setSzavIdo(myStock.getSzavIdo());
                 myChild.setErtekeles(myStock.getErtekeles());
-                stockdata.add(myChild);
+	            myChild.setMegjegyzes(" ");
+	            myChild.setBevListaba("N");
+	            stockdata.add(myChild);
                 j++;
             }
             myTermek = new Stock();
@@ -172,4 +162,57 @@ public class LekerdezesNew extends ExpandableListActivity {
             i++;
         }
     }
+
+	void promptForResult(String title, String message, int callerID, final PromptRunnable postrun) {
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle(title);
+		alert.setMessage(message);
+		// Create textbox to put into the dialog
+		final EditText input = new EditText(this);
+		// put the textbox into the dialog
+		alert.setView(input);
+		// procedure for when the ok button is clicked.
+		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				String value = input.getText().toString();
+				if (value.length() == 0) {
+					value = " ";
+				}
+				dialog.dismiss();
+				// set value from the dialog inside our runnable implementation
+				postrun.setValue(value);
+				// ** HERE IS WHERE THE MAGIC HAPPENS! **
+				// now that we have stored the value, lets run our Runnable
+				postrun.run();
+				return;
+			}
+		});
+
+		alert.setNegativeButton("Mégsem", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+				return;
+			}
+		});
+		alert.show();
+	}
+
+	public void writeStock(int groupPosition, int childPosition, int callerID, String value) {
+		Stock stock = new Stock();
+		stock.setId(adapter.getChild(groupPosition, childPosition).getId());
+		stock.setTermek(adapter.getChild(groupPosition, childPosition).getTermek());
+		stock.setDarab(Integer.toString(darabInt));
+		stock.setBarcode(adapter.getChild(groupPosition, childPosition).getBarcode());
+		stock.setMinDarab(adapter.getChild(groupPosition, childPosition).getMinDarab());
+		stock.setHelye(adapter.getChild(groupPosition, childPosition).getHelye());
+		stock.setSzavIdo(adapter.getChild(groupPosition, childPosition).getSzavIdo());
+		stock.setSzavIdoFigyel(adapter.getChild(groupPosition, childPosition).getSzavIdoFigyel());
+		stock.setErtekeles(adapter.getChild(groupPosition, childPosition).getErtekeles());
+		if (callerID == 1) {
+			stock.setBevListaba("I");
+			stock.setMegjegyzes(value);
+		}
+		new TableControllerStock(this).update(stock);
+	}
 }
+

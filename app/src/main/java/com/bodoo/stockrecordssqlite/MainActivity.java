@@ -50,60 +50,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 	public static final int TERMEK = 0, DARAB = 1, BARCODE = 2, MIN_DARAB = 3, HELYE = 4, SZAV_IDO = 5, SZAV_IDO_FIGYEL = 6, ERTEKELES = 7;
 
-    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
-
-	    // when dialog box is closed, below method will be called.
-	    public void onDateSet(DatePicker view, int selectedYear,
-	                          int selectedMonth, int selectedDay) {
-
-		    Calendar c = Calendar.getInstance();
-		    c.set(selectedYear, selectedMonth, selectedDay);
-		    c.add(Calendar.WEEK_OF_YEAR, -1);
-
-		    year_x = String.valueOf(selectedYear);
-		    month_x = String.valueOf(selectedMonth + 1);
-		    day_x = String.valueOf(selectedDay);
-		    year_LW = String.valueOf(c.get(Calendar.YEAR));
-		    month_LW = String.valueOf(c.get(Calendar.MONTH) + 1);
-		    day_LW = String.valueOf(c.get(Calendar.DAY_OF_MONTH));
-
-
-		    if (cur == DIALOG_ID1) {
-			    if (Integer.valueOf(month_x) < 10) {
-
-				    month_x = "0" + month_x;
-			    }
-			    if (Integer.valueOf(day_x) < 10) {
-
-				    day_x = "0" + day_x;
-			    }
-			    // set selected date into textview
-			    szavatossagTextView.setText(year_x + "-" + month_x + "-" + day_x);
-			    if (Integer.valueOf(month_LW) < 10) {
-
-				    month_LW = "0" + month_LW;
-			    }
-			    if (Integer.valueOf(day_LW) < 10) {
-
-				    day_LW = "0" + day_LW;
-			    }
-			    // set selected date into textview
-			    szavFigyelTextView.setText(year_LW + "-" + month_LW + "-" + day_LW);
-		    } else {
-			    if (Integer.valueOf(month_x) < 10) {
-
-				    month_x = "0" + month_x;
-			    }
-			    if (Integer.valueOf(day_x) < 10) {
-
-				    day_x = "0" + day_x;
-			    }
-			    szavFigyelTextView.setText(year_x + "-" + month_x + "-" + day_x);
-		    }
-
-	    }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,14 +123,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View v) {
 	            final Context context = v.getContext();
 
-	            setTermek = (termekNeveEditText.getText().toString());
-	            setDarab = (mennyisegEditText.getText().toString());
-	            setBarcode = (scanTextView.getText().toString());
-	            setTermek = (termekNeveEditText.getText().toString());
-	            setMinDarab = (minMennyisegEditText.getText().toString());
-	            setSzavIdo = (szavatossagTextView.getText().toString());
-	            setSzavIdoFigyel = (szavFigyelTextView.getText().toString());
-	            setErtekeles = (ertekelesEditText.getText().toString());
+	            setTermek = (termekNeveEditText.getText().toString().trim());
+	            setDarab = (mennyisegEditText.getText().toString().trim());
+	            setBarcode = (scanTextView.getText().toString().trim());
+	            setTermek = (termekNeveEditText.getText().toString().trim());
+	            setMinDarab = (minMennyisegEditText.getText().toString().trim());
+	            setSzavIdo = (szavatossagTextView.getText().toString().trim());
+	            setSzavIdoFigyel = (szavFigyelTextView.getText().toString().trim());
+	            setErtekeles = (ertekelesEditText.getText().toString().trim());
 
                 elküldés(context);
             }
@@ -293,9 +239,63 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    public void onNothingSelected(AdapterView<?> parent) {                                          // Date picker megnyitása
-        // Another interface callback
+	public void onNothingSelected(AdapterView<?> parent) {
+		// Another interface callback
     }
+
+	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+
+		// when dialog box is closed, below method will be called.
+		public void onDateSet(DatePicker view, int selectedYear,
+		                      int selectedMonth, int selectedDay) {
+
+			Calendar c = Calendar.getInstance();
+			c.set(selectedYear, selectedMonth, selectedDay);
+			c.add(Calendar.WEEK_OF_YEAR, -1);
+
+			year_x = String.valueOf(selectedYear);
+			month_x = String.valueOf(selectedMonth + 1);
+			day_x = String.valueOf(selectedDay);
+			year_LW = String.valueOf(c.get(Calendar.YEAR));
+			month_LW = String.valueOf(c.get(Calendar.MONTH) + 1);
+			day_LW = String.valueOf(c.get(Calendar.DAY_OF_MONTH));
+
+
+			if (cur == DIALOG_ID1) {
+				if (Integer.valueOf(month_x) < 10) {
+
+					month_x = "0" + month_x;
+				}
+				if (Integer.valueOf(day_x) < 10) {
+
+					day_x = "0" + day_x;
+				}
+				// set selected date into textview
+				szavatossagTextView.setText(year_x + "-" + month_x + "-" + day_x);
+				if (Integer.valueOf(month_LW) < 10) {
+
+					month_LW = "0" + month_LW;
+				}
+				if (Integer.valueOf(day_LW) < 10) {
+
+					day_LW = "0" + day_LW;
+				}
+				// set selected date into textview
+				szavFigyelTextView.setText(year_LW + "-" + month_LW + "-" + day_LW);
+			} else {
+				if (Integer.valueOf(month_x) < 10) {
+
+					month_x = "0" + month_x;
+				}
+				if (Integer.valueOf(day_x) < 10) {
+
+					day_x = "0" + day_x;
+				}
+				szavFigyelTextView.setText(year_x + "-" + month_x + "-" + day_x);
+			}
+
+		}
+	};
 
     public void resetData(){
         scanTextView.setText("");
