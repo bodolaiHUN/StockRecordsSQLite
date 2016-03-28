@@ -10,33 +10,33 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity {                                               //implements AdapterView.OnItemSelectedListener
 
 	static final int DIALOG_ID1 = 1, DIALOG_ID2 = 2;
 	public static Activity activity;
-	Button scanButton, szavatossagButton, szavFigyelButton, lekerdezesButton, elkuldesButton, torlesButton;
-    EditText termekNeveEditText, minMennyisegEditText, helyeEditText, mennyisegEditText, ertekelesEditText;
-    TextView szavatossagTextView, szavFigyelTextView, scanTextView;
-    Spinner spinnerQuery;
-    int queryString;
-    String year_x, month_x, day_x;
+	Button scanButton, szavatossagButton, szavFigyelButton, lekerdezesButton, elkuldesButton;
+	EditText termekNeveEditText, minMennyisegEditText, helyeEditText, mennyisegEditText, ertekelesEditText;
+	TextView szavatossagTextView, szavFigyelTextView, scanTextView;
+	int queryString, funkcioId = 1;
+	String year_x, month_x, day_x, today;
 	int year, month, day, cur = 0, layout;
 	String scanString, year_LW, month_LW, day_LW;
 	String setTermek, setDarab, setMinDarab, setBarcode, setHelye, setErtekeles, setSzavIdo, setSzavIdoFigyel;
@@ -55,16 +55,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         activity = this;
-        spinnerQuery = (Spinner) findViewById(R.id.spinnerQuery);
-        spinnerQuery.setOnItemSelectedListener(this);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.spinnerQuery, android.R.layout.simple_spinner_item);                        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);             // Apply the adapter to the spinner
-        spinnerQuery.setAdapter(adapter);
         scanButton = (Button) findViewById(R.id.scanButton);
         lekerdezesButton = (Button) findViewById(R.id.lekerdezesButton);
         elkuldesButton = (Button) findViewById(R.id.elkuldesButton);
-	    torlesButton = (Button) findViewById(R.id.torlesButton);
         termekNeveEditText = (EditText) findViewById(R.id.termekNeveEditText);
 	    termekNeveEditText.setOnClickListener(new View.OnClickListener() {
 		    @Override
@@ -109,14 +102,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //cd = new ConnectionDetector(getApplicationContext());                                     // Internet kapcsolat ellenorzese
         //Boolean isInternetPresent = cd.isConnectingToInternet();                                  // true or false
 
-        lekerdezesButton.setOnClickListener(new View.OnClickListener() {                            // Lekérdezés activity megnyitása
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), LekerdezesNew.class);
-                //intent.putExtra("queryString", queryString);
-                startActivity(intent);
-            }
-        });
+	    lekerdezesButton.setOnClickListener(new View.OnClickListener() {
+		    public void onClick(View v) {
+			    shortclick(funkcioId);
+		    }
+	    });
+
+	    lekerdezesButton.setOnLongClickListener(new View.OnLongClickListener() {
+		    public boolean onLongClick(View v) {
+			    registerForContextMenu(lekerdezesButton);
+			    openContextMenu(lekerdezesButton);
+			    return true;
+		    }
+	    });
 
         elkuldesButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -125,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 	            setTermek = (termekNeveEditText.getText().toString().trim());
 	            setDarab = (mennyisegEditText.getText().toString().trim());
+	            setHelye = (helyeEditText.getText().toString().trim());
 	            setBarcode = (scanTextView.getText().toString().trim());
 	            setTermek = (termekNeveEditText.getText().toString().trim());
 	            setMinDarab = (minMennyisegEditText.getText().toString().trim());
@@ -136,10 +135,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-	    torlesButton.setOnClickListener(new View.OnClickListener() {
+	    elkuldesButton.setOnLongClickListener(new View.OnLongClickListener() {
 		    @Override
-		    public void onClick(View v) {
+		    public boolean onLongClick(View v) {
 			    resetData();
+			    return true;
 		    }
 	    });
 
@@ -148,9 +148,51 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         month=cal.get(Calendar.MONTH);
         day=cal.get(Calendar.DAY_OF_MONTH);
 
+	    Calendar c = Calendar.getInstance();
+	    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	    today = df.format(c.getTime());
+
         showDialogOnButtonClick();
         addListenerOnButton();
     }
+
+	private void shortclick(int id) {
+		switch (id) {
+			case 1:
+				Intent intent = new Intent(getApplicationContext(), LekerdezesNew.class);
+				intent.putExtra("queryString", queryString);
+				startActivity(intent);
+				break;
+			case 2:
+				break;
+		}
+	}
+
+	final int CONTEXT_MENU_LEKERDEZES = 1;
+	final int CONTEXT_MENU_BEVASARLO_LISTA = 2;
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		//Context menu
+		menu.setHeaderTitle("Válassz funkciót:");
+		menu.add(Menu.NONE, CONTEXT_MENU_LEKERDEZES, Menu.NONE, "Lekérdezés");
+		menu.add(Menu.NONE, CONTEXT_MENU_BEVASARLO_LISTA, Menu.NONE, "Bevásárló lista");
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case CONTEXT_MENU_LEKERDEZES:
+				lekerdezesButton.setText("Lekérdezés");
+				funkcioId = 1;
+				break;
+			case CONTEXT_MENU_BEVASARLO_LISTA:
+				lekerdezesButton.setText("Bevásárló lista");
+				funkcioId = 2;
+				break;
+		}
+		return super.onContextItemSelected(item);
+	}
 
 	public void elküldés(Context context){
 		if (termekNeveEditText.getText().toString().length() == 0) {
@@ -175,33 +217,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 		myStock.setSzavIdo(setSzavIdo);
 		myStock.setSzavIdoFigyel(setSzavIdoFigyel);
 		myStock.setErtekeles(setErtekeles);
-
-		new TableControllerStock(context).create(myStock);
-		if (scanTextView.getText() != null){
-			new TableControllerBarcode(context).create(myBarcode);
-		}
-		boolean createSuccessfulTermek = new TableControllerTermek(context).create(myTermek);
-		if(createSuccessfulTermek){
-			resetData();
-		}else{
-			resetData();
-		}
-	}
-
-	public void elküldés(String[] data){
-		myStock.setTermek(data[TERMEK]);
-		myStock.setDarab(data[DARAB]);
-		myStock.setBarcode(data[BARCODE]);
-		myBarcode.setBarcode(data[BARCODE]);
-		myBarcode.setTermek(data[TERMEK]);
-		myBarcode.setMinDarab(data[MIN_DARAB]);
-		myTermek.setTermek(data[TERMEK]);
-		myStock.setHelye(data[HELYE]);
-		myStock.setMinDarab(data[MIN_DARAB]);
-		myStock.setSzavIdo(data[SZAV_IDO]);
-		myStock.setSzavIdoFigyel(data[SZAV_IDO_FIGYEL]);
-		myStock.setErtekeles(data[ERTEKELES]);
-		Context context = MyApplication.getAppContext();
+		myStock.setMegjegyzes("");
+		myStock.setBevListaba("N");
+		myStock.setVasarlasIdeje(today);
 
 		new TableControllerStock(context).create(myStock);
 		if (scanTextView.getText() != null){
@@ -224,23 +242,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 integrator.initiateScan();
             }
         });
-    }
-
-    public void onItemSelected(AdapterView<?> parent, View view,                                    // An item was selected. You can retrieve the selected item using
-                               int pos, long id) {                                                  // parent.getItemAtPosition(pos)
-        String item = parent.getItemAtPosition(pos).toString();
-        switch (item) {
-            case "Mind" : queryString = 0;
-                break;
-            case "Le fog járni" : queryString = 1;
-                break;
-            case "Kevés" : queryString = 2;
-                break;
-        }
-    }
-
-	public void onNothingSelected(AdapterView<?> parent) {
-		// Another interface callback
     }
 
 	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
@@ -293,7 +294,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 				}
 				szavFigyelTextView.setText(year_x + "-" + month_x + "-" + day_x);
 			}
-
 		}
 	};
 
@@ -309,51 +309,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void addListenerOnButton() {
-
         szavatossagButton = (Button) findViewById(R.id.szavatossagButton);
-
         szavatossagButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
                 showDialog(DIALOG_ID1);
-
             }
-
         });
         szavFigyelButton = (Button) findViewById(R.id.szavFigyelButton);
-
         szavFigyelButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
                 showDialog(DIALOG_ID2);
-
             }
-
         });
-
     }
 
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
-
             case DIALOG_ID1:
                 System.out.println("onCreateDialog  : " + id);
                 cur = DIALOG_ID1;
                 // set date picker as current date
-                return new DatePickerDialog(this, datePickerListener, year, month,
-                        day);
-            case DIALOG_ID2:
-                cur = DIALOG_ID2;
+	            return new DatePickerDialog(this, datePickerListener, year, month, day);
+	        case DIALOG_ID2:
+		        cur = DIALOG_ID2;
                 System.out.println("onCreateDialog2  : " + id);
                 // set date picker as current date
-                return new DatePickerDialog(this, datePickerListener, year, month,
-                        day);
-
+		        return new DatePickerDialog(this, datePickerListener, year, month, day);
         }
         return null;
     }
@@ -376,7 +362,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 	public void inputDialog(final int txtID) {
-
 		// get prompts.xml view
 		LayoutInflater layoutInflater = LayoutInflater.from(MainActivity.this);
 		switch (txtID) {
@@ -390,7 +375,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 				layout = R.layout.input_dialog_number;
 				break;
 		}
-
 		View promptView = layoutInflater.inflate(layout, null);
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 		alertDialogBuilder.setView(promptView);
@@ -412,7 +396,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 				editText.setHint("Értékelés, 1 - 5");
 				break;
 		}
-
 		// setup a dialog window
 		alertDialogBuilder.setCancelable(false)
 				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -442,7 +425,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 								dialog.cancel();
 							}
 						});
-
 		// create an alert dialog
 		final AlertDialog alert = alertDialogBuilder.create();
 		alert.setOnShowListener(new DialogInterface.OnShowListener() {

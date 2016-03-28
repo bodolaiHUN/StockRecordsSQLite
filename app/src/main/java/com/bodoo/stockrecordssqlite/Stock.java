@@ -18,6 +18,7 @@ public class Stock {
     private String ertekeles;
 	private String megjegyzes;
 	private String bevListaba;
+	private String vasarlasIdeje;
 	private String result;
 
     private ArrayList<Stock> childern = new ArrayList<>();
@@ -116,6 +117,14 @@ public class Stock {
 
 	public void setBevListaba(String bevListaba) {
 		this.bevListaba = bevListaba;
+	}
+
+	public String getVasarlasIdeje() {
+		return vasarlasIdeje;
+	}
+
+	public void setVasarlasIdeje(String vasarlasIdeje) {
+		this.vasarlasIdeje = vasarlasIdeje;
 	}
 
 	public String getResult() {

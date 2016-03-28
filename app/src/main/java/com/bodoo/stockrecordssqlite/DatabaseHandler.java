@@ -25,8 +25,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String ERTEKELES = "ertekeles";
 	public static final String MEGJEGYZES = "megjegyzes";
 	public static final String BEV_LISTABA = "bevListaba";
-    // barcode column name
-    public static final String BARCODE_ID = "id";
+	public static final String VASARLAS_IDEJE = "vasarlasIdeje";
+	// barcode column name
+	public static final String BARCODE_ID = "id";
     public static final String BARCODE = "barcode";
     public static final String BARCODE_TERMEK = "termek";
     public static final String BARCODE_MINDARAB = "minDarab";
@@ -54,7 +55,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 BARCODE_STOCK + " TEXT, " +
                 ERTEKELES + " TEXT, " +
 		        MEGJEGYZES + " TEXT, " +
-		        BEV_LISTABA + " TEXT)";
+		        BEV_LISTABA + " TEXT, " +
+		        VASARLAS_IDEJE + " TEXT)";
 
         String barcodeSql = "CREATE TABLE " + TABLE_BARCODE + "(" +
                 BARCODE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +

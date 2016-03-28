@@ -80,7 +80,7 @@ public class LekerdezesNew extends ExpandableListActivity {
 				removeItemFromList(groupPosition, childPosition);
 				return true;
 			} else {
-				writeStock(groupPosition, childPosition, 0, "");
+				writeStock(groupPosition, childPosition, 0, "N");
 			}
 			finish();
 			startActivity(getIntent());
