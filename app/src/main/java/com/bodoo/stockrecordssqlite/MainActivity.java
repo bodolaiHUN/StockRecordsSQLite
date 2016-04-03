@@ -10,16 +10,15 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -32,10 +31,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 	static final int DIALOG_ID1 = 1, DIALOG_ID2 = 2;
 	public static Activity activity;
-	Button scanButton, szavatossagButton, szavFigyelButton, lekerdezesButton, elkuldesButton;
+	Button scanButton, szavatossagButton, szavFigyelButton, lekerdezesButton, elkuldesButton, torlesButton;
     EditText termekNeveEditText, minMennyisegEditText, helyeEditText, mennyisegEditText, ertekelesEditText;
     TextView szavatossagTextView, szavFigyelTextView, scanTextView;
-    int queryString, funkcioId = 1;
+    Spinner spinnerQuery;
+    int queryString;
     String year_x, month_x, day_x;
 	int year, month, day, cur = 0, layout;
 	String scanString, year_LW, month_LW, day_LW;
@@ -106,9 +106,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         activity = this;
+        spinnerQuery = (Spinner) findViewById(R.id.spinnerQuery);
+        spinnerQuery.setOnItemSelectedListener(this);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.spinnerQuery, android.R.layout.simple_spinner_item);                        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);             // Apply the adapter to the spinner
+        spinnerQuery.setAdapter(adapter);
         scanButton = (Button) findViewById(R.id.scanButton);
         lekerdezesButton = (Button) findViewById(R.id.lekerdezesButton);
         elkuldesButton = (Button) findViewById(R.id.elkuldesButton);
+	    torlesButton = (Button) findViewById(R.id.torlesButton);
         termekNeveEditText = (EditText) findViewById(R.id.termekNeveEditText);
 	    termekNeveEditText.setOnClickListener(new View.OnClickListener() {
 		    @Override
@@ -153,29 +160,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //cd = new ConnectionDetector(getApplicationContext());                                     // Internet kapcsolat ellenorzese
         //Boolean isInternetPresent = cd.isConnectingToInternet();                                  // true or false
 
-        lekerdezesButton.setOnClickListener(new View.OnClickListener() {
+        lekerdezesButton.setOnClickListener(new View.OnClickListener() {                            // Lekérdezés activity megnyitása
             @Override
             public void onClick(View v) {
-				switch (funkcioId){
-					case 1:
-						Intent intent = new Intent(getApplicationContext(), LekerdezesNew.class);
-						//intent.putExtra("queryString", queryString);
-						startActivity(intent);
-						break;
-					case 2:
-						//TODO: bevásárló lista megjelenítése
-						break;
-				}
+                Intent intent = new Intent(getApplicationContext(), LekerdezesNew.class);
+                //intent.putExtra("queryString", queryString);
+                startActivity(intent);
             }
         });
-
-		lekerdezesButton.setOnLongClickListener(new View.OnLongClickListener() {
-			public boolean onLongClick(View v) {
-				registerForContextMenu(lekerdezesButton);
-				openContextMenu(lekerdezesButton);
-				return true;
-			}
-		});
 
         elkuldesButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -195,13 +187,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-		elkuldesButton.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				resetData();
-				return true;
-			}
-		});
+	    torlesButton.setOnClickListener(new View.OnClickListener() {
+		    @Override
+		    public void onClick(View v) {
+			    resetData();
+		    }
+	    });
 
         final Calendar cal = Calendar.getInstance();
         year=cal.get(Calendar.YEAR);
@@ -459,31 +450,5 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 			}
 		});
 		alert.show();
-	}
-
-	final int CONTEXT_MENU_LEKERDEZES = 1;
-	final int CONTEXT_MENU_BEVASARLO_LISTA = 2;
-
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-		//Context menu
-		menu.setHeaderTitle("Válassz funkciót:");
-		menu.add(Menu.NONE, CONTEXT_MENU_LEKERDEZES, Menu.NONE, "Lekérdezés");
-		menu.add(Menu.NONE, CONTEXT_MENU_BEVASARLO_LISTA, Menu.NONE, "Bevásárló lista");
-	}
-
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case CONTEXT_MENU_LEKERDEZES:
-				lekerdezesButton.setText("Lekérdezés");
-				funkcioId = 1;
-				break;
-			case CONTEXT_MENU_BEVASARLO_LISTA:
-				lekerdezesButton.setText("Bevásárló lista");
-				funkcioId = 2;
-				break;
-		}
-		return super.onContextItemSelected(item);
 	}
 }

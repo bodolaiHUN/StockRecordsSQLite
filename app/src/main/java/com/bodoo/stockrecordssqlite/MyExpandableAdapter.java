@@ -57,6 +57,7 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
 	    holder.barcode.setText(parentItems.get(groupPosition).getArrayChildren(childPosition).getBarcode());
 		holder.szavIdo.setText(parentItems.get(groupPosition).getArrayChildren(childPosition).getSzavIdo());
 	    holder.ertekeles.setText(parentItems.get(groupPosition).getArrayChildren(childPosition).getErtekeles());
+	    Log.d("ID", Long.toString(parentItems.get(groupPosition).getArrayChildren(childPosition).getId()));
 
         //return the entire view
         return view;
@@ -82,8 +83,6 @@ public class MyExpandableAdapter extends BaseExpandableListAdapter {
 	    }else{
 		    holder.darab.setTextColor(Color.BLACK);
 	    }
-	    Log.d("darab", parentItems.get(groupPosition).getDarab());
-	    Log.d("minDarab", parentItems.get(groupPosition).getMinDarab());
         holder.darab.setText(parentItems.get(groupPosition).getDarab());
 
         //return the entire view

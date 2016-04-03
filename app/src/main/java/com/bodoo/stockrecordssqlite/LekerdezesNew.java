@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -27,7 +26,6 @@ public class LekerdezesNew extends ExpandableListActivity {
     MyExpandableAdapter adapter = new MyExpandableAdapter( termekek );
     Notifications myNotifications = new Notifications();
     Stock myTermek, myChild;
-	int darabInt;
 
 
     @Override
@@ -59,8 +57,7 @@ public class LekerdezesNew extends ExpandableListActivity {
 
 		menu.setHeaderTitle("Válassz:");
 		menu.add(0, v.getId(), 0, "Törlés");
-		menu.add(0, v.getId(), 0, "Módosítás (-1)");
-		menu.add(0, v.getId(), 0, "Bevásárló listába");
+		menu.add(0, v.getId(), 0, "Módosítás");
 	}
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
@@ -70,20 +67,10 @@ public class LekerdezesNew extends ExpandableListActivity {
 		int groupPosition = ExpandableListView.getPackedPositionGroup(info.packedPosition);
 		int childPosition = ExpandableListView.getPackedPositionChild(info.packedPosition);
 		if (item.getTitle() == "Törlés") {
+			Toast.makeText(this, "törlés", Toast.LENGTH_SHORT).show();
 			removeItemFromList(groupPosition, childPosition);
-		} else if (item.getTitle() == "Módosítás (-1)") {
-			darabInt = Integer.valueOf(adapter.getChild(groupPosition, childPosition).getDarab());
-			if (darabInt <= 1) {
-				Log.d("darab", Integer.toString(darabInt));
-				removeItemFromList(groupPosition, childPosition);
-				return true;
-			} else {
-				writeStock(groupPosition, childPosition, 0, "N");
-			}
-			finish();
-			startActivity(getIntent());
-		}else if (item.getTitle() == "Bevásárló listába") {
-			Toast.makeText(this, "bevásárló listába", Toast.LENGTH_SHORT).show();
+		} else if (item.getTitle() == "Módosítás") {
+			Toast.makeText(this, "nemsoká jön... :-)", Toast.LENGTH_SHORT).show();
 		} else {
 			return false;
 		}
@@ -165,30 +152,4 @@ public class LekerdezesNew extends ExpandableListActivity {
             i++;
         }
     }
-
-	public void writeStock(int groupPosition, int childPosition, int callerID, String value) {
-		Stock stock = new Stock();
-		stock.setId(adapter.getChild(groupPosition, childPosition).getId());
-		stock.setTermek(adapter.getChild(groupPosition, childPosition).getTermek());
-		stock.setDarab(Integer.toString(darabInt));
-		stock.setBarcode(adapter.getChild(groupPosition, childPosition).getBarcode());
-		stock.setMinDarab(adapter.getChild(groupPosition, childPosition).getMinDarab());
-		stock.setHelye(adapter.getChild(groupPosition, childPosition).getHelye());
-		stock.setSzavIdo(adapter.getChild(groupPosition, childPosition).getSzavIdo());
-		stock.setSzavIdoFigyel(adapter.getChild(groupPosition, childPosition).getSzavIdoFigyel());
-		stock.setErtekeles(adapter.getChild(groupPosition, childPosition).getErtekeles());
-		//if (callerID == 1) {
-		//	stock.setBevListaba("I");
-		//	stock.setMegjegyzes(value);
-		//}else{
-		//	stock.setBevListaba("N");
-		//	stock.setMegjegyzes("");
-		//}
-		switch (callerID){
-			case 0:
-				stock.setDarab(Integer.toString(darabInt - 1));
-				break;
-		}
-		new TableControllerStock(this).update(stock);
-	}
 }

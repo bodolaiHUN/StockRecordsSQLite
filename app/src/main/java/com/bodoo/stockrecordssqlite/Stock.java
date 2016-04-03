@@ -16,6 +16,11 @@ public class Stock {
     private String szavIdoFigyel;
     private String barcode;
     private String ertekeles;
+	private String megjegyzes;
+	private String bevListaba;
+	private String vasarlasIdeje;
+	private String result;
+
     private ArrayList<Stock> childern = new ArrayList<>();
 
     public int getId() {
@@ -98,9 +103,36 @@ public class Stock {
 
     public void setArrayChildren(ArrayList<Stock> arrayChildren) { this.childern = arrayChildren; }
 
-    public int childrenSize() { return this.childern.size(); }
+	public String getMegjegyzes() {
+		return megjegyzes;
+	}
 
-	public void removeChild(int position){
-		this.childern.remove(position);
+	public void setMegjegyzes(String megjegyzes) {
+		this.megjegyzes = megjegyzes;
+	}
+
+	public String getBevListaba() {
+		return bevListaba;
+	}
+
+	public void setBevListaba(String bevListaba) {
+		this.bevListaba = bevListaba;
+	}
+
+	public String getVasarlasIdeje() {
+		return vasarlasIdeje;
+	}
+
+	public void setVasarlasIdeje(String vasarlasIdeje) {
+		this.vasarlasIdeje = vasarlasIdeje;
+	}
+
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
 	}
 }
+

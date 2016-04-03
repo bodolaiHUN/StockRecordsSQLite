@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     // Database name
     protected static final String DATABASE_NAME = "StockRecords";
     // Table names
@@ -23,8 +23,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String SZAV_IDO_FIGYEL = "szavIdoFigyel";
     public static final String BARCODE_STOCK = "barcode";
     public static final String ERTEKELES = "ertekeles";
-    // barcode column name
-    public static final String BARCODE_ID = "id";
+	public static final String MEGJEGYZES = "megjegyzes";
+	public static final String BEV_LISTABA = "bevListaba";
+	public static final String VASARLAS_IDEJE = "vasarlasIdeje";
+	// barcode column name
+	public static final String BARCODE_ID = "id";
     public static final String BARCODE = "barcode";
     public static final String BARCODE_TERMEK = "termek";
     public static final String BARCODE_MINDARAB = "minDarab";
@@ -50,7 +53,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 SZAV_IDO + " TEXT, " +
                 SZAV_IDO_FIGYEL + " TEXT, " +
                 BARCODE_STOCK + " TEXT, " +
-                ERTEKELES + " TEXT)";
+                ERTEKELES + " TEXT, " +
+		        MEGJEGYZES + " TEXT, " +
+		        BEV_LISTABA + " TEXT, " +
+		        VASARLAS_IDEJE + " TEXT)";
 
         String barcodeSql = "CREATE TABLE " + TABLE_BARCODE + "(" +
                 BARCODE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
