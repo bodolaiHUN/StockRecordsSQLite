@@ -10,15 +10,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -31,12 +32,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 	static final int DIALOG_ID1 = 1, DIALOG_ID2 = 2;
 	public static Activity activity;
-	Button scanButton, szavatossagButton, szavFigyelButton, lekerdezesButton, elkuldesButton, torlesButton;
-    EditText termekNeveEditText, minMennyisegEditText, helyeEditText, mennyisegEditText, ertekelesEditText;
+	final int CONTEXT_MENU_LEKERDEZES = 1;
+	final int CONTEXT_MENU_BEVASARLO_LISTA = 2;
+	Button scanButton, szavatossagButton, szavFigyelButton, lekerdezesButton, elkuldesButton;
+	EditText termekNeveEditText, minMennyisegEditText, helyeEditText, mennyisegEditText, ertekelesEditText;
     TextView szavatossagTextView, szavFigyelTextView, scanTextView;
-    Spinner spinnerQuery;
-    int queryString;
-    String year_x, month_x, day_x;
+	int queryString, funkcioId = 1;
+	String year_x, month_x, day_x;
 	int year, month, day, cur = 0, layout;
 	String scanString, year_LW, month_LW, day_LW;
 	String setTermek, setDarab, setMinDarab, setBarcode, setHelye, setErtekeles, setSzavIdo, setSzavIdoFigyel;
@@ -47,75 +49,65 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     TableControllerBarcode myTCB = new TableControllerBarcode(this);
     Notifications myNotifications = new Notifications();
     //ConnectionDetector cd;
-    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+	private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
 
-	    // when dialog box is closed, below method will be called.
-	    public void onDateSet(DatePicker view, int selectedYear,
-	                          int selectedMonth, int selectedDay) {
+		// when dialog box is closed, below method will be called.
+		public void onDateSet(DatePicker view, int selectedYear,
+							  int selectedMonth, int selectedDay) {
+			Calendar c = Calendar.getInstance();
+			c.set(selectedYear, selectedMonth, selectedDay);
+			c.add(Calendar.WEEK_OF_YEAR, -1);
+			year_x = String.valueOf(selectedYear);
+			month_x = String.valueOf(selectedMonth + 1);
+			day_x = String.valueOf(selectedDay);
+			year_LW = String.valueOf(c.get(Calendar.YEAR));
+			month_LW = String.valueOf(c.get(Calendar.MONTH) + 1);
+			day_LW = String.valueOf(c.get(Calendar.DAY_OF_MONTH));
 
-		    Calendar c = Calendar.getInstance();
-		    c.set(selectedYear, selectedMonth, selectedDay);
-		    c.add(Calendar.WEEK_OF_YEAR, -1);
+			if (cur == DIALOG_ID1) {
+				if (Integer.valueOf(month_x) < 10) {
 
-		    year_x = String.valueOf(selectedYear);
-		    month_x = String.valueOf(selectedMonth + 1);
-		    day_x = String.valueOf(selectedDay);
-		    year_LW = String.valueOf(c.get(Calendar.YEAR));
-		    month_LW = String.valueOf(c.get(Calendar.MONTH) + 1);
-		    day_LW = String.valueOf(c.get(Calendar.DAY_OF_MONTH));
+					month_x = "0" + month_x;
+				}
+				if (Integer.valueOf(day_x) < 10) {
 
+					day_x = "0" + day_x;
+				}
+				// set selected date into textview
+				szavatossagTextView.setText(year_x + "-" + month_x + "-" + day_x);
+				if (Integer.valueOf(month_LW) < 10) {
 
-		    if (cur == DIALOG_ID1) {
-			    if (Integer.valueOf(month_x) < 10) {
+					month_LW = "0" + month_LW;
+				}
+				if (Integer.valueOf(day_LW) < 10) {
 
-				    month_x = "0" + month_x;
-			    }
-			    if (Integer.valueOf(day_x) < 10) {
+					day_LW = "0" + day_LW;
+				}
+				// set selected date into textview
+				szavFigyelTextView.setText(year_LW + "-" + month_LW + "-" + day_LW);
+			} else {
+				if (Integer.valueOf(month_x) < 10) {
 
-				    day_x = "0" + day_x;
-			    }
-			    // set selected date into textview
-			    szavatossagTextView.setText(year_x + "-" + month_x + "-" + day_x);
-			    if (Integer.valueOf(month_LW) < 10) {
+					month_x = "0" + month_x;
+				}
+				if (Integer.valueOf(day_x) < 10) {
 
-				    month_LW = "0" + month_LW;
-			    }
-			    if (Integer.valueOf(day_LW) < 10) {
+					day_x = "0" + day_x;
+				}
+				szavFigyelTextView.setText(year_x + "-" + month_x + "-" + day_x);
+			}
 
-				    day_LW = "0" + day_LW;
-			    }
-			    // set selected date into textview
-			    szavFigyelTextView.setText(year_LW + "-" + month_LW + "-" + day_LW);
-		    } else {
-			    if (Integer.valueOf(month_x) < 10) {
-
-				    month_x = "0" + month_x;
-			    }
-			    if (Integer.valueOf(day_x) < 10) {
-
-				    day_x = "0" + day_x;
-			    }
-			    szavFigyelTextView.setText(year_x + "-" + month_x + "-" + day_x);
-		    }
-
-	    }
-    };
+		}
+	};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         activity = this;
-        spinnerQuery = (Spinner) findViewById(R.id.spinnerQuery);
-        spinnerQuery.setOnItemSelectedListener(this);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.spinnerQuery, android.R.layout.simple_spinner_item);                        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);             // Apply the adapter to the spinner
-        spinnerQuery.setAdapter(adapter);
         scanButton = (Button) findViewById(R.id.scanButton);
         lekerdezesButton = (Button) findViewById(R.id.lekerdezesButton);
         elkuldesButton = (Button) findViewById(R.id.elkuldesButton);
-	    torlesButton = (Button) findViewById(R.id.torlesButton);
         termekNeveEditText = (EditText) findViewById(R.id.termekNeveEditText);
 	    termekNeveEditText.setOnClickListener(new View.OnClickListener() {
 		    @Override
@@ -163,17 +155,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         lekerdezesButton.setOnClickListener(new View.OnClickListener() {                            // Lekérdezés activity megnyitása
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), LekerdezesNew.class);
-                //intent.putExtra("queryString", queryString);
-                startActivity(intent);
-            }
+				switch (funkcioId) {
+					case 0:
+						Intent intent = new Intent(getApplicationContext(), LekerdezesNew.class);
+						//intent.putExtra("queryString", queryString);
+						startActivity(intent);
+						break;
+					case 1:
+						break;
+				}
+			}
         });
+
+		lekerdezesButton.setOnLongClickListener(new View.OnLongClickListener() {
+			public boolean onLongClick(View v) {
+				registerForContextMenu(lekerdezesButton);
+				openContextMenu(lekerdezesButton);
+				return true;
+			}
+		});
 
         elkuldesButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 	            final Context context = v.getContext();
-
 	            setTermek = (termekNeveEditText.getText().toString());
 	            setDarab = (mennyisegEditText.getText().toString());
 	            setBarcode = (scanTextView.getText().toString());
@@ -182,17 +187,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 	            setSzavIdo = (szavatossagTextView.getText().toString());
 	            setSzavIdoFigyel = (szavFigyelTextView.getText().toString());
 	            setErtekeles = (ertekelesEditText.getText().toString());
-
                 elküldés(context);
             }
         });
 
-	    torlesButton.setOnClickListener(new View.OnClickListener() {
-		    @Override
-		    public void onClick(View v) {
-			    resetData();
-		    }
-	    });
+		elkuldesButton.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				resetData();
+				return true;
+			}
+		});
 
         final Calendar cal = Calendar.getInstance();
         year=cal.get(Calendar.YEAR);
@@ -306,38 +311,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void addListenerOnButton() {
-
         szavatossagButton = (Button) findViewById(R.id.szavatossagButton);
-
         szavatossagButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-
                 showDialog(DIALOG_ID1);
-
             }
-
         });
         szavFigyelButton = (Button) findViewById(R.id.szavFigyelButton);
-
         szavFigyelButton.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-
                 showDialog(DIALOG_ID2);
-
             }
-
         });
-
     }
 
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
-
             case DIALOG_ID1:
                 System.out.println("onCreateDialog  : " + id);
                 cur = DIALOG_ID1;
@@ -350,7 +342,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 // set date picker as current date
                 return new DatePickerDialog(this, datePickerListener, year, month,
                         day);
-
         }
         return null;
     }
@@ -450,5 +441,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 			}
 		});
 		alert.show();
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		//Context menu
+		menu.setHeaderTitle("Válassz funkciót:");
+		menu.add(Menu.NONE, CONTEXT_MENU_LEKERDEZES, Menu.NONE, "Lekérdezés");
+		menu.add(Menu.NONE, CONTEXT_MENU_BEVASARLO_LISTA, Menu.NONE, "Bevásárló lista");
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case CONTEXT_MENU_LEKERDEZES:
+				lekerdezesButton.setText("Lekérdezés");
+				funkcioId = 0;
+				break;
+			case CONTEXT_MENU_BEVASARLO_LISTA:
+				lekerdezesButton.setText("Bevásárló lista");
+				funkcioId = 1;
+				break;
+		}
+		return super.onContextItemSelected(item);
 	}
 }
